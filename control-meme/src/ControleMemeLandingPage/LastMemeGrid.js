@@ -1,0 +1,41 @@
+import { db } from "../firebase/firebaseconfig"
+import { collection, getDocs } from "firebase/firestore";
+
+
+import { useEffect, useState } from "react";
+// Composant that displays the last memes
+// fetches the last 10 memes from the firestore db
+export default function LastMemeGrid (props) {
+
+    const [lastMemesUrls, setLastMemesUrls] = useState([]);
+
+    // fetch last10 memes from firestore and add them to the state
+    const fetchPost = async () => {
+        //todo:fix  how many are returned 
+        await getDocs(collection(db, "images"))
+            .then((querySnapshot)=>{               
+                querySnapshot.forEach((doc) => {
+                    setLastMemesUrls((lastMemesUrls) => [...lastMemesUrls, doc.data().url]);
+                });
+            })
+       
+    }
+
+
+
+    // fetches the last 10 memes from the firestore db at the start of the component
+    useEffect(() => {
+        fetchPost()
+    }, [])
+
+
+
+
+    return (
+        <div className="LastMemeGrid">
+            {lastMemesUrls.map((url, index) => {
+                return <img src={url} alt="meme" key={index} />
+            })}
+        </div>
+    )
+}
