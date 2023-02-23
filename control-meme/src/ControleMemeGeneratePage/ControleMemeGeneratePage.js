@@ -1,11 +1,27 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
-import { useState } from "react";
+import { Breadcrumbs, Link, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { db } from "../firebase/firebaseconfig"
+import { collection, getDocs } from "firebase/firestore";
+import { fetchBaseMemesUrls } from "../firebase/firestoreCalls";
+import { Carousel } from 'react-responsive-carousel';
 
 export default function ControleMemeGeneratePage(props) {
 
     const STEPS = ['Colab Connection', 'Base Image Selection', 'ControleNet Generation'];
 
     const [currentStep, setCurrentStep] = useState(0);
+    // get default value from url
+    const [colabSessionLink, setColabSessionLink] = useState(new URLSearchParams(window.location.search).get('colabSessionLink') || "");
+
+    const [baseMemesUrls, setBaseMemesUrls] = useState([]);
+    // fetch last10 memes from firestore and add them to the state
+    
+
+    useEffect(() => {
+        fetchBaseMemesUrls().then((baseMemesUrls) =>  {setBaseMemesUrls(baseMemesUrls)})
+    }, [])
+
+
 
 
     const breadcrumbs = <Breadcrumbs aria-label="breadcrumb" separator=">">
@@ -28,13 +44,25 @@ export default function ControleMemeGeneratePage(props) {
         }
         </Breadcrumbs>
 
+    // Carousel base on baseMemesUrls
+    const carousel = <Carousel>
+        {baseMemesUrls.map((url, index) => {
+                    <div>
+                        <img src={url} />
+                        <p className="legend">Legend {index}</p>
+                    </div>
+        })}
+
+    </Carousel>
+    
     
 
     return (
         <div className="ControleMemeGeneratePage">
             {breadcrumbs}
 
-            {currentStep === 0 && <ControleMemeGeneratePageStep1 />}
+            {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
+                                                                 setColabSessionLink={setColabSessionLink} />}
             {currentStep === 1 && <ControleMemeGeneratePageStep2 />}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>
@@ -47,7 +75,13 @@ export default function ControleMemeGeneratePage(props) {
 function ControleMemeGeneratePageStep1(props) {
     return (
         <div className="ControleMemeGeneratePageStep1">
-            <h1>Step 1</h1>
+            <h1>Step 1: Connect to colab backend</h1>
+            <p>1. Open the Colab in another tab</p>
+            <p>2. Run all the cells until are given the session link</p>
+            <p>3. Copy the session link and paste it in the input below</p>
+            <p>4. Click on the next button</p>
+            <p>if you've clicked on the link from colab, it should already be pasted in the field below</p>
+            <TextField label="Colab Session Link" variant="outlined" value={props.colabSessionLink} onChange={(e) => props.setColabSessionLink(e.target.value)} />
         </div>
     )
 }
