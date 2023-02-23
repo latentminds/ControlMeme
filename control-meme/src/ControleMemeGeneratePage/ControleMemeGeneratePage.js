@@ -143,11 +143,6 @@ function ControleMemeGeneratePageStep2(props) {
         <div className="ControleMemeGeneratePageStep2">
             <h1>Step 2</h1>
             <h2>1. Select a base image</h2>
-            <h3>Method 1: Upload your own base image</h3>
-
-            <UploadImage setFile={(val) => setUploadedFile(val) }/>
-
-            <h3>Method 2: Select an existing base image</h3>
             <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={      
                                 {
                                     0: {
