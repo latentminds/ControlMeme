@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import ControleMemeLandingPage from './ControleMemeLandingPage/ControleMemeLandingPage';
+import ControleMeme from './ControleMeme';
 
 function App() {
   return (
     <div className="App">
-      <ControleMemeLandingPage />
+      <ControleMeme />
 
     </div>
   );

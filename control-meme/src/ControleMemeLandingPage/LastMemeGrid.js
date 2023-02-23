@@ -13,10 +13,14 @@ export default function LastMemeGrid (props) {
     const fetchPost = async () => {
         //todo:fix  how many are returned 
         await getDocs(collection(db, "images"))
-            .then((querySnapshot)=>{               
+            .then((querySnapshot)=>{           
+                let lastMemesUrls = [];    
                 querySnapshot.forEach((doc) => {
-                    setLastMemesUrls((lastMemesUrls) => [...lastMemesUrls, doc.data().url]);
+                    console.log(doc.data());
+                    console.log(lastMemesUrls.length);
+                    lastMemesUrls.push(doc.data().url);
                 });
+                setLastMemesUrls(lastMemesUrls);
             })
        
     }
@@ -34,7 +38,7 @@ export default function LastMemeGrid (props) {
     return (
         <div className="LastMemeGrid">
             {lastMemesUrls.map((url, index) => {
-                return <img src={url} alt="meme" key={index} />
+                return <img src={url} alt="meme" key={index} height={100} width={100}  />
             })}
         </div>
     )
