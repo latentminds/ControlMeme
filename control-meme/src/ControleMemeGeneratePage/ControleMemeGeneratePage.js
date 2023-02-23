@@ -100,9 +100,14 @@ function ControleMemeGeneratePageStep2(props) {
     const handleClickGenerate = () => {
         const formData = new FormData();
         formData.append('file', uploadedFile);
-        formData.append('prompt', prompt);
-        formData.append('controlnetPreprocess', controlnetPreprocess);
-        formData.append('controlnetModel', controlnetModel);
+        //put other params in dict and stringify it to formdata
+        const args = {
+            'prompt': prompt,
+            'controlnetPreprocess': controlnetPreprocess,
+            'controlnetModel': controlnetModel
+        }
+        formData.append('args', JSON.stringify(args));
+
         console.log(formData)
         fetch('http://localhost:5000/api/generate', {
             method: 'POST',
