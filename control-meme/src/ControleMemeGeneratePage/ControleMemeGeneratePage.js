@@ -101,10 +101,12 @@ function ControleMemeGeneratePageStep2(props) {
         const formData = new FormData();
         formData.append('file', uploadedFile);
         //put other params in dict and stringify it to formdata
+        // todo: if image selected from coroussel, add base_image_link to args 
         const args = {
             'prompt': prompt,
             'controlnetPreprocess': controlnetPreprocess,
-            'controlnetModel': controlnetModel
+            'controlnetModel': controlnetModel,
+            'base_image_origin': 'upload'
         }
         formData.append('args', JSON.stringify(args));
 

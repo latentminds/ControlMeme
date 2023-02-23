@@ -18,7 +18,7 @@ export const fetchLastGeneratedMemesUrls = async () => {
 
 export const fetchBaseMemesUrls = async () => {
     let baseMemesUrls = [];    
-    return await getDocs(collection(db, "base_memes"))
+    return await getDocs(collection(db, "BaseMemes"))
         .then((querySnapshot)=>{           
             querySnapshot.forEach((doc) => {
                 baseMemesUrls.push(doc.data().url);
