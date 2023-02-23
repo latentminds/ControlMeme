@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseconfig"
 import { collection, getDocs } from "firebase/firestore";
 import { fetchBaseMemesUrls } from "../firebase/firestoreCalls";
-import { Carousel } from 'react-responsive-carousel';
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
+
 
 export default function ControleMemeGeneratePage(props) {
 
@@ -18,7 +20,10 @@ export default function ControleMemeGeneratePage(props) {
     
 
     useEffect(() => {
-        fetchBaseMemesUrls().then((baseMemesUrls) =>  {setBaseMemesUrls(baseMemesUrls)})
+        fetchBaseMemesUrls().then((baseMemesUrls) =>  {
+            setBaseMemesUrls(baseMemesUrls)
+            console.log(baseMemesUrls)
+        })
     }, [])
 
 
@@ -44,16 +49,7 @@ export default function ControleMemeGeneratePage(props) {
         }
         </Breadcrumbs>
 
-    // Carousel base on baseMemesUrls
-    const carousel = <Carousel>
-        {baseMemesUrls.map((url, index) => {
-                    <div>
-                        <img src={url} />
-                        <p className="legend">Legend {index}</p>
-                    </div>
-        })}
 
-    </Carousel>
     
     
 
@@ -63,13 +59,15 @@ export default function ControleMemeGeneratePage(props) {
 
             {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
                                                                  setColabSessionLink={setColabSessionLink} />}
-            {currentStep === 1 && <ControleMemeGeneratePageStep2 />}
+            {currentStep === 1 && <ControleMemeGeneratePageStep2 baseMemesUrls={baseMemesUrls}/>}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>
 
 
     )
 }
+
+
 
 
 function ControleMemeGeneratePageStep1(props) {
@@ -87,9 +85,32 @@ function ControleMemeGeneratePageStep1(props) {
 }
 
 function ControleMemeGeneratePageStep2(props) {
+
+    const handleDragStart = (e) => e.preventDefault();
+
+    // create img list from baseMemesUrls
+    const items = props.baseMemesUrls.map((url, index) => {
+        return (
+                <img src={url} onDragStart={handleDragStart} alt='' role="presentation" onClick={() => console.log(index)
+
+                }/>
+        )
+    })
+
+
+
     return (
         <div className="ControleMemeGeneratePageStep2">
             <h1>Step 2</h1>
+            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={      {
+        0: {
+            items: 1,
+        },
+        1024: {
+            items: 3,
+            itemsFit: 'contain',
+        }
+      }}/>
         </div>
     )
 }
