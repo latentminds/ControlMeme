@@ -1,4 +1,5 @@
 import * as React from 'react';
+import TextField from '@mui/material/TextField'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +13,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import InputAdornment from '@mui/material/InputAdornment';
+
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Search from '@mui/icons-material/Search'
 
 import "./ResponsiveAppBar.css"
 
@@ -151,6 +156,20 @@ function ResponsiveAppBar(props) {
 
               </Button>
             ))}
+          </Box>
+
+          <Box>
+            <TextField
+              id="standard-basic"
+              placeholder="Search meme"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: 'white'}}/>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
