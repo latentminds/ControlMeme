@@ -1,10 +1,11 @@
-import { Breadcrumbs, Link, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, FormControl, InputLabel, Link, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseconfig"
 import { collection, getDocs } from "firebase/firestore";
 import { fetchBaseMemesUrls } from "../firebase/firestoreCalls";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import { UploadImage } from "./UploadImage";
 
 
 export default function ControleMemeGeneratePage(props) {
@@ -88,29 +89,105 @@ function ControleMemeGeneratePageStep2(props) {
 
     const handleDragStart = (e) => e.preventDefault();
 
+    const [prompt, setPrompt] = useState("");
+    const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
+    const [controlnetModel, setControlnetModel] = useState("none");
+
+    const [uploadedFile, setUploadedFile] = useState(null);
+    console.log(uploadedFile)
+
+    // send file to api
+    const handleClickGenerate = () => {
+        const formData = new FormData();
+        formData.append('file', uploadedFile);
+        formData.append('prompt', prompt);
+        formData.append('controlnetPreprocess', controlnetPreprocess);
+        formData.append('controlnetModel', controlnetModel);
+        console.log(formData)
+        fetch('http://localhost:5000/api/generate', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
     // create img list from baseMemesUrls
     const items = props.baseMemesUrls.map((url, index) => {
         return (
-                <img src={url} onDragStart={handleDragStart} alt='' role="presentation" onClick={() => console.log(index)
+                <img src={url} height='100' onDragStart={handleDragStart} alt='' role="presentation" onClick={() => console.log(index)
 
                 }/>
         )
     })
+
+    // Component to upload image to api
 
 
 
     return (
         <div className="ControleMemeGeneratePageStep2">
             <h1>Step 2</h1>
-            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={      {
-        0: {
-            items: 1,
-        },
-        1024: {
-            items: 3,
-            itemsFit: 'contain',
-        }
-      }}/>
+            <h2>1. Select a base image</h2>
+            <h3>Method 1: Upload your own base image</h3>
+
+            <UploadImage setFile={(val) => setUploadedFile(val) }/>
+
+            <h3>Method 2: Select an existing base image</h3>
+            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={      
+                                {
+                                    0: {
+                                        items: 1,
+                                    },
+                                    1024: {
+                                        items: 3,
+                                        itemsFit: 'contain',
+                                    }
+                                }}
+            />
+
+
+            
+            
+            <h2>2. Prompt and params: </h2>
+            <FormControl fullWidth>
+                <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                <br />
+                <TextField select
+                    id="select-controlnet-preprocess"
+                    value={controlnetPreprocess}
+                    label="Controlnet Preprocess"
+                    onChange={(e) => setControlnetPreprocess(e.target.value)}
+                >
+                    <MenuItem value="none">None</MenuItem>
+                    <MenuItem value="depth">depth</MenuItem>
+                </TextField>
+                <br />
+                
+                <TextField select
+                    id="select-controlnet-model"
+                    value={controlnetModel}
+                    label="Controlnet Model"
+                    onChange={(e) => setControlnetModel(e.target.value)}
+                >
+                    <MenuItem value="none">None</MenuItem>
+                    <MenuItem value="depth">depth</MenuItem>
+                </TextField>
+            </FormControl>
+
+            <h2> 3. Generate meme !</h2>
+
+            <FormControl fullWidth>
+                <Button variant="contained" color="primary" onClick={() => handleClickGenerate() }>Generate</Button>
+            </FormControl>
+
         </div>
     )
 }
