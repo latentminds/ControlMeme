@@ -55,7 +55,7 @@ export default function ControleMemeGeneratePage(props) {
             {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
                                                                  setColabSessionLink={setColabSessionLink} />}
             {currentStep === 1 && <ControleMemeGeneratePageStep2 colabSessionLink={colabSessionLink} 
-                                                                 baseMemesUrls={baseMemes.map((meme) => meme.url)} />}
+                                                                 baseMemes={baseMemes} />}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>
 
@@ -95,7 +95,10 @@ function ControleMemeGeneratePageStep2(props) {
     // send file to api
     const handleClickGenerate = () => {
         // convert steps to int
+        const selectedMemeUUID = props.baseMemes.find((baseMeme) => baseMeme.url === selectedMeme).uuid
+
         const args = {
+            "uuid": selectedMemeUUID,
             "prompt": prompt,
             "num_inference_steps": parseInt(numInferencesSteps),
             "controlnet_hint_url": selectedMeme
@@ -148,9 +151,9 @@ function ControleMemeGeneratePageStep2(props) {
 
 
     // create img list from baseMemesUrls
-    const items = props.baseMemesUrls.map((url, index) => {
+    const items = props.baseMemes.map((baseMeme, index) => {
         return (
-            <img src={url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(url) 
+            <img src={baseMeme.url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(baseMeme.url) 
             } />
         )
     })
