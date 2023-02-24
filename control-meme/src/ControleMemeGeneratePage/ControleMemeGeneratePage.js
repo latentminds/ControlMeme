@@ -7,6 +7,7 @@ import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { UploadImage } from "./UploadImage";
 
+import "./ControlMemeGeneratePage.css"
 
 export default function ControleMemeGeneratePage(props) {
 
@@ -18,17 +19,14 @@ export default function ControleMemeGeneratePage(props) {
 
     const [baseMemesUrls, setBaseMemesUrls] = useState([]);
     // fetch last10 memes from firestore and add them to the state
-    
+
 
     useEffect(() => {
-        fetchBaseMemesUrls().then((baseMemesUrls) =>  {
+        fetchBaseMemesUrls().then((baseMemesUrls) => {
             setBaseMemesUrls(baseMemesUrls)
             console.log(baseMemesUrls)
         })
     }, [])
-
-
-
 
     const breadcrumbs = <Breadcrumbs aria-label="breadcrumb" separator=">">
         {
@@ -38,7 +36,7 @@ export default function ControleMemeGeneratePage(props) {
                     <Link
                         underline="hover"
                         key={index}
-                        color={index === currentStep  ? "text.primary" : "text.secondary"}  
+                        color={index === currentStep ? "text.primary" : "text.secondary"}
                         //make bold if current step
                         sx={{ fontWeight: index === currentStep ? "bold" : "normal" }}
                         onClick={() => setCurrentStep(index)}
@@ -48,28 +46,21 @@ export default function ControleMemeGeneratePage(props) {
                 )
             })
         }
-        </Breadcrumbs>
-
-
-    
-    
+    </Breadcrumbs>
 
     return (
         <div className="ControleMemeGeneratePage">
             {breadcrumbs}
 
             {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
-                                                                 setColabSessionLink={setColabSessionLink} />}
-            {currentStep === 1 && <ControleMemeGeneratePageStep2 baseMemesUrls={baseMemesUrls}/>}
+                setColabSessionLink={setColabSessionLink} />}
+            {currentStep === 1 && <ControleMemeGeneratePageStep2 baseMemesUrls={baseMemesUrls} />}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>
 
 
     )
 }
-
-
-
 
 function ControleMemeGeneratePageStep1(props) {
     return (
@@ -86,12 +77,13 @@ function ControleMemeGeneratePageStep1(props) {
 }
 
 function ControleMemeGeneratePageStep2(props) {
-
     const handleDragStart = (e) => e.preventDefault();
 
     const [prompt, setPrompt] = useState("");
     const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
     const [controlnetModel, setControlnetModel] = useState("none");
+
+    const [selectedMeme, setSelectedMeme] = useState("https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg");
 
     const [uploadedFile, setUploadedFile] = useState(null);
     console.log(uploadedFile)
@@ -129,9 +121,8 @@ function ControleMemeGeneratePageStep2(props) {
     // create img list from baseMemesUrls
     const items = props.baseMemesUrls.map((url, index) => {
         return (
-                <img src={url} height='100' onDragStart={handleDragStart} alt='' role="presentation" onClick={() => console.log(index)
-
-                }/>
+            <img src={url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(url) 
+            } />
         )
     })
 
@@ -143,21 +134,21 @@ function ControleMemeGeneratePageStep2(props) {
         <div className="ControleMemeGeneratePageStep2">
             <h1>Step 2</h1>
             <h2>1. Select a base image</h2>
-            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={      
-                                {
-                                    0: {
-                                        items: 1,
-                                    },
-                                    1024: {
-                                        items: 3,
-                                        itemsFit: 'contain',
-                                    }
-                                }}
+            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={
+                {
+                    0: {
+                        items: 1,
+                    },
+                    1024: {
+                        items: 5,
+                        itemsFit: 'contain',
+                    }
+                }}
             />
 
+            <img src={selectedMeme} className="SelectedMeme"/>
 
-            
-            
+
             <h2>2. Prompt and params: </h2>
             <FormControl fullWidth>
                 <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
@@ -172,7 +163,7 @@ function ControleMemeGeneratePageStep2(props) {
                     <MenuItem value="depth">depth</MenuItem>
                 </TextField>
                 <br />
-                
+
                 <TextField select
                     id="select-controlnet-model"
                     value={controlnetModel}
@@ -187,7 +178,7 @@ function ControleMemeGeneratePageStep2(props) {
             <h2> 3. Generate meme !</h2>
 
             <FormControl fullWidth>
-                <Button variant="contained" color="primary" onClick={() => handleClickGenerate() }>Generate</Button>
+                <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}>Generate</Button>
             </FormControl>
 
         </div>

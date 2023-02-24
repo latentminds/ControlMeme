@@ -1,0 +1,14 @@
+.MemeSelectionImage {
+    position: relative;
+    height: 10em;
+}
+
+.MemeSelectionImage:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.SelectedMeme {
+    height: 30em;
+    aspect-ratio: auto;
+}
