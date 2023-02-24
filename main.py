@@ -28,6 +28,49 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
+
+def add_variation_to_data(file, parent_uuid, **kwargs):
+    
+    # get kwargs
+    prompt = kwargs.get("prompt")
+    controlnetPreprocess = kwargs.get("controlnetPreprocess")
+    controlnetModel = kwargs.get("controlnetModel")
+    baseModel = kwargs.get("baseModel")
+    nb_steps = kwargs.get("nb_steps")
+    sampler = kwargs.get("sampler")
+    seed = kwargs.get("seed")
+    guidance_strenght_prompt = kwargs.get("guidance_strenght_prompt")
+    guidance_strenght_image = kwargs.get("guidance_strenght_image")
+    
+    # save meme variation to bucket
+    
+    formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
+    bucket_save_path = "meme_variation_" + formated_timestamp + ".png"
+    blob = bucket.blob(bucket_save_path)
+    blob.upload_from_string(file, content_type="image/png")
+    url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
+    
+    # save meme variation to firestore as a child of the meme with id memeID
+    db = firestore.client()
+    doc_ref = db.collection("BaseMemes").document(parent_uuid).collection("Variations").document()
+    doc_ref.set(
+        {
+            "url": url,
+            "prompt": prompt,
+            "controlnetPreprocess": controlnetPreprocess,
+            "controlnetModel": controlnetModel,
+            "baseModel": baseModel,
+            "nb_steps": nb_steps,
+            "sampler": sampler,
+            "seed": seed,
+            "guidance_strenght_prompt": guidance_strenght_prompt,
+            "guidance_strenght_image": guidance_strenght_image,
+            "timestamp": firestore.SERVER_TIMESTAMP,
+            "parent_uuid": parent_uuid
+        }
+    )
+
+
 #route to add a new meme variation to memeID
 @app.route("/api/meme/<memeID>/variation/", methods=["POST"])
 def add_variation(memeID):
@@ -37,7 +80,6 @@ def add_variation(memeID):
     params post: file:base64str, prompt:str, controlnetPreprocess:str, controlnetModel:str, baseModel:str, nb steps:int, sampler:str, seed:int, guidance_strenght_prompt:float, guidance_strenght_image:float
     """
     
-    memeID = request.args.get("memeID")
     # get post data from form
     file = request.form.get("file")
     prompt = request.form.get("prompt")
@@ -52,33 +94,19 @@ def add_variation(memeID):
     
     # Todo add image fast validation
     
+    add_variation_to_data(file, memeID, 
+                          prompt=prompt, 
+                          controlnetPreprocess=controlnetPreprocess, 
+                          controlnetModel=controlnetModel, 
+                          baseModel=baseModel, 
+                          nb_steps=nb_steps, 
+                          sampler=sampler, 
+                          seed=seed, 
+                          guidance_strenght_prompt=guidance_strenght_prompt, 
+                          guidance_strenght_image=guidance_strenght_image)
+    
     
     # save base64 image to storage
-    formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
-    bucket_save_path = "meme_variation_" + formated_timestamp + ".png"
-    blob = bucket.blob(bucket_save_path)
-    blob.upload_from_string(file, content_type="image/png")
-    url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
-    
-    # save meme variation to firestore as a child of the meme with id memeID
-    db = firestore.client()
-    doc_ref = db.collection("BaseMemes").document(memeID).collection("Variations").document()
-    doc_ref.set(
-        {
-            "url": url,
-            "prompt": prompt,
-            "controlnetPreprocess": controlnetPreprocess,
-            "controlnetModel": controlnetModel,
-            "baseModel": baseModel,
-            "nb_steps": nb_steps,
-            "sampler": sampler,
-            "seed": seed,
-            "guidance_strenght_prompt": guidance_strenght_prompt,
-            "guidance_strenght_image": guidance_strenght_image,
-            "timestamp": firestore.SERVER_TIMESTAMP,
-            "parent_uuid": memeID
-        }
-    )
     
     return "success"
 
@@ -96,6 +124,7 @@ def generate_meme():
     params post: base_image: str base64,  args: dict
     args: prompt:str, controlnetPreprocess:str, controlnetModel:str 
     """
+    
     # get post data from form
     base_image = request.form.get("file")
     args = request.form.get("args")
