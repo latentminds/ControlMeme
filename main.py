@@ -9,7 +9,9 @@ from firebase_admin import credentials, firestore, initialize_app
 from google.cloud import storage
 import requests
 import time
-
+import random
+import os
+import base64
 
 
 cred = credentials.Certificate("./firebase_key.json")
@@ -29,7 +31,7 @@ def hello_world():
 
 
 
-def add_variation_to_data(file, parent_uuid, **kwargs):
+def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
     
     # get kwargs
     prompt = kwargs.get("prompt")
@@ -45,9 +47,9 @@ def add_variation_to_data(file, parent_uuid, **kwargs):
     # save meme variation to bucket
     
     formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
-    bucket_save_path = "meme_variation_" + formated_timestamp + ".png"
+    bucket_save_path = "meme_variation_" + formated_timestamp + ".jpeg"
     blob = bucket.blob(bucket_save_path)
-    blob.upload_from_string(file, content_type="image/png")
+    blob.upload_from_filename(image_path_local, content_type="image/jpeg")
     url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
     
     # save meme variation to firestore as a child of the meme with id memeID
@@ -72,29 +74,38 @@ def add_variation_to_data(file, parent_uuid, **kwargs):
 
 
 #route to add a new meme variation to memeID
-@app.route("/api/meme/<memeID>/variation/", methods=["POST"])
-def add_variation(memeID):
+@app.route("/api/save_variation/", methods=["POST"])
+def add_variation():
     """
     Add a new meme variation to memeID
     params get: memeID:str
     params post: file:base64str, prompt:str, controlnetPreprocess:str, controlnetModel:str, baseModel:str, nb steps:int, sampler:str, seed:int, guidance_strenght_prompt:float, guidance_strenght_image:float
     """
-    
-    # get post data from form
-    file = request.form.get("file")
-    prompt = request.form.get("prompt")
-    controlnetPreprocess = request.form.get("controlnetPreprocess")
-    controlnetModel = request.form.get("controlnetModel")
-    baseModel = request.form.get("baseModel")
-    nb_steps = request.form.get("nb_steps")
-    sampler = request.form.get("sampler")
-    seed = request.form.get("seed")
-    guidance_strenght_prompt = request.form.get("guidance_strenght_prompt")
-    guidance_strenght_image = request.form.get("guidance_strenght_image")
-    
+    print('called')
+    # get post data from post request
+    args = request.get_json()
+    print('oups')
+    memeID = args.get("memeID")
+    fileb64 = args.get("imageb64")
+    prompt = args.get("prompt")
+    controlnetPreprocess = args.get("controlnetPreprocess")
+    controlnetModel = args.get("controlnetModel")
+    baseModel = args.get("baseModel")
+    nb_steps = args.get("nb_steps")
+    sampler = args.get("sampler")
+    seed = args.get("seed")
+    guidance_strenght_prompt = args.get("guidance_strenght_prompt")
+    guidance_strenght_image = args.get("guidance_strenght_image")
+    print('here')
     # Todo add image fast validation
-    
-    add_variation_to_data(file, memeID, 
+    random_name = str(random.randint(0, 10000))
+    #save to jpeg
+    path = f"./{random_name}.jpeg"
+    with open(path, 'wb') as f:
+        f.write(base64.b64decode(fileb64))
+
+
+    add_variation_to_data(path, memeID, 
                           prompt=prompt, 
                           controlnetPreprocess=controlnetPreprocess, 
                           controlnetModel=controlnetModel, 
@@ -105,10 +116,14 @@ def add_variation(memeID):
                           guidance_strenght_prompt=guidance_strenght_prompt, 
                           guidance_strenght_image=guidance_strenght_image)
     
+    os.remove(path)
     
     # save base64 image to storage
     
     return "success"
+# call example with requests and params as form data
+
+    
 
 
 
