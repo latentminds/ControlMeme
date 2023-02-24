@@ -16,14 +16,19 @@ export const fetchLastGeneratedMemesUrls = async () => {
    
 }
 
-export const fetchBaseMemesUrls = async () => {
-    let baseMemesUrls = [];    
+export const fetchBaseMemesData = async () => {
+    //fetch base memes data with uuid from firestore
+    let baseMemes = [];
     return await getDocs(collection(db, "BaseMemes"))
-        .then((querySnapshot)=>{           
+        .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                baseMemesUrls.push(doc.data().url);
+                let meme = doc.data();
+                meme.uuid = doc.id;
+                baseMemes.push(meme);
             }
             );
-            return baseMemesUrls;
-        }) 
-    }
+            console.log(baseMemes);
+            return baseMemes;
+        }
+        )
+}

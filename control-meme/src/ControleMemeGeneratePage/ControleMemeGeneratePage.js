@@ -2,7 +2,7 @@ import { Breadcrumbs, Button, FormControl, InputLabel, Link, MenuItem, Select, T
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseconfig"
 import { collection, getDocs } from "firebase/firestore";
-import { fetchBaseMemesUrls } from "../firebase/firestoreCalls";
+import { fetchBaseMemesData, fetchBaseMemesUrls } from "../firebase/firestoreCalls";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { UploadImage } from "./UploadImage";
@@ -17,14 +17,14 @@ export default function ControleMemeGeneratePage(props) {
     // get default value from url
     const [colabSessionLink, setColabSessionLink] = useState(new URLSearchParams(window.location.search).get('colabSessionLink') || "");
 
-    const [baseMemesUrls, setBaseMemesUrls] = useState([]);
+    const [baseMemes, setBaseMemes] = useState([]);
     // fetch last10 memes from firestore and add them to the state
 
 
     useEffect(() => {
-        fetchBaseMemesUrls().then((baseMemesUrls) => {
-            setBaseMemesUrls(baseMemesUrls)
-            console.log(baseMemesUrls)
+        fetchBaseMemesData().then((baseMemes) => {
+            setBaseMemes(baseMemes)
+            console.log(baseMemes)
         })
     }, [])
 
@@ -53,8 +53,9 @@ export default function ControleMemeGeneratePage(props) {
             {breadcrumbs}
 
             {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
-                setColabSessionLink={setColabSessionLink} />}
-            {currentStep === 1 && <ControleMemeGeneratePageStep2 baseMemesUrls={baseMemesUrls} />}
+                                                                 setColabSessionLink={setColabSessionLink} />}
+            {currentStep === 1 && <ControleMemeGeneratePageStep2 colabSessionLink={colabSessionLink} 
+                                                                 baseMemesUrls={baseMemes.map((meme) => meme.url)} />}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>
 
@@ -80,41 +81,69 @@ function ControleMemeGeneratePageStep2(props) {
     const handleDragStart = (e) => e.preventDefault();
 
     const [prompt, setPrompt] = useState("");
+    const [numInferencesSteps, setNumInferencesSteps] = useState(50);
     const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
     const [controlnetModel, setControlnetModel] = useState("none");
 
     const [selectedMeme, setSelectedMeme] = useState("https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg");
 
-    const [uploadedFile, setUploadedFile] = useState(null);
-    console.log(uploadedFile)
+    const [generatedImageb64, setGeneratedImageb64] = useState("");
+
+    console.log(generatedImageb64)
+    
 
     // send file to api
     const handleClickGenerate = () => {
-        const formData = new FormData();
-        formData.append('file', uploadedFile);
-        //put other params in dict and stringify it to formdata
-        // todo: if image selected from coroussel, add base_image_link to args 
+        // convert steps to int
         const args = {
-            'prompt': prompt,
-            'controlnetPreprocess': controlnetPreprocess,
-            'controlnetModel': controlnetModel,
-            'base_image_origin': 'upload'
+            "prompt": prompt,
+            "num_inference_steps": parseInt(numInferencesSteps),
+            "controlnet_hint_url": selectedMeme
         }
-        formData.append('args', JSON.stringify(args));
-
-        console.log(formData)
-        fetch('http://localhost:5000/api/generate', {
+        console.log(args)
+        // call api and get base64 image response
+        fetch(props.colabSessionLink, {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',
+                'Bypass-Tunnel-Reminder': 'please'
+            },
+            body: JSON.stringify(args),
         })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Success:', result);
-            })
-            .catch(error => {
+            .then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+                setGeneratedImageb64(data)
+            }
+            )
+            .catch((error) => {
                 console.error('Error:', error);
-            });
+            }
+            );
+
     }
+
+    const handleClickAddToPublic = () => {
+        // fetch colab link
+        fetch(props.colabSessionLink+'/save_last/', {
+            method: 'GET',
+            headers: {
+                'Bypass-Tunnel-Reminder': 'please'
+            },
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+            }
+            )
+            .catch((error) => {
+                console.error('Error:', error);
+            }
+            );
+    }
+
+                
+        
 
 
 
@@ -153,7 +182,9 @@ function ControleMemeGeneratePageStep2(props) {
             <FormControl fullWidth>
                 <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
                 <br />
-                <TextField select
+                <TextField label="Num Inferences Steps" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
+                <br />
+                {/* <TextField select
                     id="select-controlnet-preprocess"
                     value={controlnetPreprocess}
                     label="Controlnet Preprocess"
@@ -172,7 +203,7 @@ function ControleMemeGeneratePageStep2(props) {
                 >
                     <MenuItem value="none">None</MenuItem>
                     <MenuItem value="depth">depth</MenuItem>
-                </TextField>
+                </TextField> */}
             </FormControl>
 
             <h2> 3. Generate meme !</h2>
@@ -181,6 +212,11 @@ function ControleMemeGeneratePageStep2(props) {
                 <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}>Generate</Button>
             </FormControl>
 
+            <h2> 4. See IA Variation !</h2>
+            <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme"/>
+            
+            <br />
+            <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}>Add to public gallery</Button>
         </div>
     )
 }
