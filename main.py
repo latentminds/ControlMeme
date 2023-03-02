@@ -67,7 +67,7 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
             "seed": seed,
             "guidance_strenght_prompt": guidance_strenght_prompt,
             "guidance_strenght_image": guidance_strenght_image,
-            "timestamp": firestore.SERVER_TIMESTAMP,
+            "timestamp": firestore.SERVER_TIMESTAMP, # type: ignore
             "parent_uuid": parent_uuid
         }
     
