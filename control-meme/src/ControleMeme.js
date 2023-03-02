@@ -6,6 +6,8 @@ import ControleMemeLandingPage from "./ControleMemeLandingPage/ControleMemeLandi
 export default function ControleMeme() {
 
     const [currentPage, setCurrentPage] = useState('Browse');
+    const [colabSessionLink, setColabSessionLink] = useState("https://" + new URLSearchParams(window.location.search).get('gpuURL') || "https://");
+
 
 
     return (
@@ -17,7 +19,7 @@ export default function ControleMeme() {
 
 
             {currentPage === 'Browse' && <ControleMemeLandingPage />}
-            {currentPage === 'Generate' && <ControleMemeGeneratePage /> }
+            {currentPage === 'Generate' && <ControleMemeGeneratePage colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink} />}
             {currentPage === 'About' && <h1>About</h1>}
         </div>
     );

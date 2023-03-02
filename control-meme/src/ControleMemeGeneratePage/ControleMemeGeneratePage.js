@@ -9,13 +9,12 @@ import { UploadImage } from "./UploadImage";
 
 import "./ControlMemeGeneratePage.css"
 
-export default function ControleMemeGeneratePage(props) {
+export default function ControleMemeGeneratePage({colabSessionLink, setColabSessionLink}) {
 
     const STEPS = ['Colab Connection', 'Base Image Selection', 'ControleNet Generation'];
 
     const [currentStep, setCurrentStep] = useState(0);
     // get default value from url
-    const [colabSessionLink, setColabSessionLink] = useState(new URLSearchParams(window.location.search).get('colabSessionLink') || "");
 
     const [baseMemes, setBaseMemes] = useState([]);
     // fetch last10 memes from firestore and add them to the state
@@ -105,7 +104,7 @@ function ControleMemeGeneratePageStep2(props) {
         }
         console.log(args)
         // call api and get base64 image response
-        fetch(props.colabSessionLink, {
+        fetch(props.colabSessionLink + '/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
