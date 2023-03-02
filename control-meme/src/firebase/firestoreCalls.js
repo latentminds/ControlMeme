@@ -1,20 +1,25 @@
 import { db } from "./firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
 
-export const fetchLastGeneratedMemesUrls = async () => {
-    //todo:fix  how many are returned 
-    let lastMemesUrls = [];    
-    return await getDocs(collection(db, "images"))
-        .then((querySnapshot)=>{           
+export const fetchLastGeneratedMemesVariations = async () => {
+    let lastVariations = [];
+    // collection is BaseMemes > id of the base meme > Variations
+    return await getDocs(collection(db, "Variations"))
+        .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                lastMemesUrls.push(doc.data().url);
+                let meme = doc.data();
+                meme.uuid = doc.id;
+                lastVariations.push(meme);
             }
-            
             );
-            return lastMemesUrls;
-        })
-   
+            console.log(lastVariations);
+            return lastVariations;
+        }
+        )
 }
+
+
+
 
 export const fetchBaseMemesData = async () => {
     //fetch base memes data with uuid from firestore

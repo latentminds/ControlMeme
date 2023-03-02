@@ -1,4 +1,4 @@
-import { fetchLastGeneratedMemesUrls } from "../firebase/firestoreCalls";
+import { fetchLastGeneratedMemesVariations } from "../firebase/firestoreCalls";
 
 import TextField from '@mui/material/TextField'
 import Search from '@mui/icons-material/Search'
@@ -29,7 +29,14 @@ export default function LastMemeGrid(props) {
 
     // fetches the last 10 memes from the firestore db at the start of the component
     useEffect(() => {
-        fetchLastGeneratedMemesUrls().then((lastMemesUrls) => { setLastMemesUrls(lastMemesUrls) })
+        fetchLastGeneratedMemesVariations().then((lastMemes => {
+            let lastMemesUrls = [];
+            lastMemes.forEach((meme) => {
+                lastMemesUrls.push(meme.url);
+            });
+            setLastMemesUrls(lastMemesUrls);
+        }
+        ))
     }, [])
 
 
