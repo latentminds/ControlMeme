@@ -152,7 +152,13 @@ function ControleMemeGeneratePageStep2(props) {
 
                 
         
-
+    const changeControlnetThresholdA = (event, newValue) => {
+        console.log('called')
+        setControlnetThresholdA(newValue);
+    };
+    const changeControlnetThresholdB = (event, newValue) => {
+        setControlnetThresholdB(newValue);
+    };
 
 
     // create img list from baseMemesUrls
@@ -179,9 +185,26 @@ function ControleMemeGeneratePageStep2(props) {
                     <br />
                     <TextField label="Controlnet Model" variant="outlined" value={controlnetModel} onChange={(e) => setControlnetModel(e.target.value)} />
                     <br />
-                    <Slider value={controlnetThresholdA} onChange={(e, newValue) => setControlnetThresholdA(newValue)} aria-labelledby="continuous-slider" />
+                    <Slider 
+                            defaultValue={controlnetThresholdA}
+                            aria-labelledby="continuous-slider-A" 
+                            valueLabelDisplay="auto"
+                            step={1}
+                            min={0}
+                            max={200}
+                            onChangeCommitted={changeControlnetThresholdA}
+                             />
                     <br />
-                    <Slider value={controlnetThresholdB} onChange={(e, newValue) => setControlnetThresholdB(newValue)} aria-labelledby="continuous-slider" />
+                    <Slider
+                            defaultValue={controlnetThresholdB}
+                            aria-labelledby="continuous-slider-B" 
+                            valueLabelDisplay="auto"
+                            step={1}
+                            min={0}
+                            max={200}
+                            onChangeCommitted={changeControlnetThresholdB}
+                        />
+
                     <br />
                     <Button variant="contained" color="primary" onClick={handleClickGenerate}>
                         Generate
@@ -194,7 +217,7 @@ function ControleMemeGeneratePageStep2(props) {
                 {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint"/>}
             </Grid>
         </Grid>
-        
+
 
     </div>
         )
