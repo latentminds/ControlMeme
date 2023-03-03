@@ -94,19 +94,23 @@ function ControleMemeGeneratePageStep2(props) {
     const [generatedImageb64, setGeneratedImageb64] = useState("");
 
 
-
+//control_canny [e3fe7712]
     
 
     // send file to api
     const handleClickGenerate = () => {
         // convert steps to int
-        const selectedMemeUUID = props.baseMemes.find((baseMeme) => baseMeme.url === selectedMeme).uuid
+        console.log("selectedMeme", selectedMeme)
+        const selectedMemeUUID = selectedMeme.uuid
 
         const args = {
             "uuid": selectedMemeUUID,
             "prompt": prompt,
-            "num_inference_steps": parseInt(numInferencesSteps),
-            "controlnet_hint_url": selectedMeme
+            "nb_steps": parseInt(numInferencesSteps),
+            "controlnet_basememe_url": selectedMeme.url,
+            "controlnet_module": controlnetPreprocess,
+            "controlnet_threshold_a": controlnetThresholdA,
+            "controlnet_threshold_b": controlnetThresholdB
         }
         console.log(args)
         // call api and get base64 image response
@@ -150,6 +154,39 @@ function ControleMemeGeneratePageStep2(props) {
             );
     }
 
+
+    const handleClickHintPreview = () => {
+        // call api with with the following args
+        const args = {
+            'controlnet_basememe_url': selectedMeme.url,
+            'controlnet_module': controlnetPreprocess,
+            'controlnet_threshold_a': controlnetThresholdA,
+            'controlnet_threshold_b': controlnetThresholdB
+        }
+        console.log(args)
+
+        // call api POST at /hint/ and get base64 image response
+        fetch(props.colabSessionLink + '/hint/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Bypass-Tunnel-Reminder': 'please'
+            },
+            body: JSON.stringify(args),
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+                setControlnetHintb64(data)
+            }
+            )
+            .catch((error) => {
+                console.error('Error:', error);
+            }
+            );
+    }
+
+
                 
         
     const changeControlnetThresholdA = (event, newValue) => {
@@ -164,7 +201,7 @@ function ControleMemeGeneratePageStep2(props) {
     // create img list from baseMemesUrls
     const items = props.baseMemes.map((baseMeme, index) => {
         return (
-            <img src={baseMeme.url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(baseMeme.url) 
+            <img src={baseMeme.url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(baseMeme) 
             } />
         )
     })
@@ -181,7 +218,28 @@ function ControleMemeGeneratePageStep2(props) {
                     <br />
                     <TextField label="Num Inferences Steps" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
                     <br />
-                    <TextField label="Controlnet Preprocess" variant="outlined" value={controlnetPreprocess} onChange={(e) => setControlnetPreprocess(e.target.value)} />
+                    {/* Select one of canny, hed, mlsd, depth, depths_leres, normal_map, openpose, openpose_hand, fake_skribble, segmentation, pidinet */}
+                    <label id="demo-simple-select-label">Controlnet Preprocess</label>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={controlnetPreprocess}
+                        onChange={(e) => setControlnetPreprocess(e.target.value)}
+                    >
+                        <MenuItem value={"none"}>None</MenuItem>
+                        <MenuItem value={"canny"}>Canny</MenuItem>
+                        <MenuItem value={"hed"}>HED</MenuItem>
+                        <MenuItem value={"mlsd"}>MLSD</MenuItem>
+                        <MenuItem value={"depth"}>Depth</MenuItem>
+                        <MenuItem value={"depths_leres"}>Depth LERES</MenuItem>
+                        <MenuItem value={"normal_map"}>Normal Map</MenuItem>
+                        <MenuItem value={"openpose"}>OpenPose</MenuItem>
+                        <MenuItem value={"openpose_hand"}>OpenPose Hand</MenuItem>
+                        <MenuItem value={"fake_skribble"}>Fake Skribble</MenuItem>
+                        <MenuItem value={"segmentation"}>Segmentation</MenuItem>
+                        <MenuItem value={"pidinet"}>PIDINet</MenuItem>
+                    </Select>
+
                     <br />
                     <TextField label="Controlnet Model" variant="outlined" value={controlnetModel} onChange={(e) => setControlnetModel(e.target.value)} />
                     <br />
@@ -206,8 +264,8 @@ function ControleMemeGeneratePageStep2(props) {
                         />
 
                     <br />
-                    <Button variant="contained" color="primary" onClick={handleClickGenerate}>
-                        Generate
+                    <Button variant="contained" color="primary" onClick={handleClickHintPreview}>
+                        Generate Hint Preview
                     </Button>
                 </FormControl>
             </Grid>
@@ -245,7 +303,7 @@ function ControleMemeGeneratePageStep2(props) {
                 }}
             />
 
-            <img src={selectedMeme} className="SelectedMeme"/>
+            <img src={selectedMeme.url} className="SelectedMeme"/>
 
             <h2> 2. Add a prompt and params</h2>
             {/* Display side by side */}
