@@ -1,4 +1,4 @@
-import { Breadcrumbs, Button, FormControl, InputLabel, Link, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Breadcrumbs, Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, Slider, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseconfig"
 import { collection, getDocs } from "firebase/firestore";
@@ -77,18 +77,24 @@ function ControleMemeGeneratePageStep1(props) {
 }
 
 function ControleMemeGeneratePageStep2(props) {
+    const DEFAULT_IMAGE_URL = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
+
     const handleDragStart = (e) => e.preventDefault();
 
     const [prompt, setPrompt] = useState("");
     const [numInferencesSteps, setNumInferencesSteps] = useState(50);
     const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
     const [controlnetModel, setControlnetModel] = useState("none");
+    const [controlnetThresholdA, setControlnetThresholdA] = useState(0);
+    const [controlnetThresholdB, setControlnetThresholdB] = useState(0);
 
-    const [selectedMeme, setSelectedMeme] = useState("https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg");
+    const [selectedMeme, setSelectedMeme] = useState(DEFAULT_IMAGE_URL);
+    const [controlnetHintb64, setControlnetHintb64] = useState("");
 
     const [generatedImageb64, setGeneratedImageb64] = useState("");
 
-    console.log(generatedImageb64)
+
+
     
 
     // send file to api
@@ -157,6 +163,45 @@ function ControleMemeGeneratePageStep2(props) {
         )
     })
 
+    // panel for prompt and params options
+    const ParamsPanel = () => {
+        return (
+    <div className="ParamsPanel">
+        <Grid container spacing={2}>
+            <Grid item xs={6}>
+
+                <FormControl fullWidth>
+                    <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                    <br />
+                    <TextField label="Num Inferences Steps" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
+                    <br />
+                    <TextField label="Controlnet Preprocess" variant="outlined" value={controlnetPreprocess} onChange={(e) => setControlnetPreprocess(e.target.value)} />
+                    <br />
+                    <TextField label="Controlnet Model" variant="outlined" value={controlnetModel} onChange={(e) => setControlnetModel(e.target.value)} />
+                    <br />
+                    <Slider value={controlnetThresholdA} onChange={(e, newValue) => setControlnetThresholdA(newValue)} aria-labelledby="continuous-slider" />
+                    <br />
+                    <Slider value={controlnetThresholdB} onChange={(e, newValue) => setControlnetThresholdB(newValue)} aria-labelledby="continuous-slider" />
+                    <br />
+                    <Button variant="contained" color="primary" onClick={handleClickGenerate}>
+                        Generate
+                    </Button>
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+
+                {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint"/>}
+                {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint"/>}
+            </Grid>
+        </Grid>
+        
+
+    </div>
+        )
+    }
+
+
+
     // Component to upload image to api
 
 
@@ -179,34 +224,11 @@ function ControleMemeGeneratePageStep2(props) {
 
             <img src={selectedMeme} className="SelectedMeme"/>
 
-
-            <h2>2. Prompt and params: </h2>
-            <FormControl fullWidth>
-                <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-                <br />
-                <TextField label="Num Inferences Steps" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
-                <br />
-                {/* <TextField select
-                    id="select-controlnet-preprocess"
-                    value={controlnetPreprocess}
-                    label="Controlnet Preprocess"
-                    onChange={(e) => setControlnetPreprocess(e.target.value)}
-                >
-                    <MenuItem value="none">None</MenuItem>
-                    <MenuItem value="depth">depth</MenuItem>
-                </TextField>
-                <br />
-
-                <TextField select
-                    id="select-controlnet-model"
-                    value={controlnetModel}
-                    label="Controlnet Model"
-                    onChange={(e) => setControlnetModel(e.target.value)}
-                >
-                    <MenuItem value="none">None</MenuItem>
-                    <MenuItem value="depth">depth</MenuItem>
-                </TextField> */}
-            </FormControl>
+            <h2> 2. Add a prompt and params</h2>
+            {/* Display side by side */}
+            <div className="ParamsPanel">
+                <ParamsPanel />
+            </div>
 
             <h2> 3. Generate meme !</h2>
 
@@ -215,7 +237,10 @@ function ControleMemeGeneratePageStep2(props) {
             </FormControl>
 
             <h2> 4. See IA Variation !</h2>
-            <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme"/>
+            
+            {generatedImageb64 !== "" && <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme"/>} 
+            {generatedImageb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="generated image" className="GeneratedMeme"/>}
+
             
             <br />
             <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}>Add to public gallery</Button>

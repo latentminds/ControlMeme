@@ -13,7 +13,6 @@ export default function ControleMeme() {
     return (
         <div>
             <ResponsiveAppBar setCurrentPage={(newPage) => {
-                console.log(newPage);
                 setCurrentPage(newPage)} 
                 }/>
 
