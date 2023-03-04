@@ -54,7 +54,7 @@ export default function ControleMemeGeneratePage({ colabSessionLink, setColabSes
 
             {currentStep === 0 && <ControleMemeGeneratePageStep1 colabSessionLink={colabSessionLink}
                 setColabSessionLink={setColabSessionLink} />}
-            {currentStep === 1 && <ControleMemeGeneratePageStep2 colabSessionLink={colabSessionLink}
+            {currentStep === 1 && <ControleMemeGeneratePageStep2 colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink}
                 baseMemes={baseMemes} />}
             {currentStep === 2 && <ControleMemeGeneratePageStep3 />}
         </div>

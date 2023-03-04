@@ -15,7 +15,7 @@ const ParamsPanel = ({ selectedMeme,
 }) => {
 
     const DEFAULT_IMAGE_URL = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
-
+    console.log(selectedMeme)
     const handleClickHintPreview = () => {
         // call api with with the following args
         const args = {
@@ -80,6 +80,7 @@ const ParamsPanel = ({ selectedMeme,
                         </Select>
 
                         <br />
+                        <label id="label-select-model">Controlnet Model</label>
                         <Select
                             labelId="label-select-model"
                             id="demo-simple-select"
@@ -141,7 +142,7 @@ export function ControleMemeGeneratePageStep2(props) {
     const [controlnetThresholdA, setControlnetThresholdA] = useState(0);
     const [controlnetThresholdB, setControlnetThresholdB] = useState(0);
 
-    const [selectedMeme, setSelectedMeme] = useState(DEFAULT_IMAGE_URL);
+    const [selectedMeme, setSelectedMeme] = useState({ 'url': DEFAULT_IMAGE_URL });
     const [controlnetHintb64, setControlnetHintb64] = useState("");
 
     const [generatedImageb64, setGeneratedImageb64] = useState("");
@@ -222,6 +223,8 @@ export function ControleMemeGeneratePageStep2(props) {
     return (
         <div className="ControleMemeGeneratePageStep2">
             <h1>Step 2</h1>
+            <TextField label="Colab Session Link" variant="outlined" value={props.colabSessionLink} onChange={(e) => props.setColabSessionLink(e.target.value)} />
+
             <h2>1. Select a base image</h2>
             <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={
                 {
@@ -243,6 +246,8 @@ export function ControleMemeGeneratePageStep2(props) {
                 <ParamsPanel
                     prompt={prompt}
                     setPrompt={setPrompt}
+                    selectedMeme={selectedMeme}
+                    colabSessionLink={props.colabSessionLink} setColabSessionLink={props.setColabSessionLink}
                     numInferencesSteps={numInferencesSteps} setNumInferencesSteps={setNumInferencesSteps}
                     controlnetPreprocess={controlnetPreprocess} setControlnetPreprocess={setControlnetPreprocess}
                     controlnetModel={controlnetModel} setControlnetModel={setControlnetModel}
