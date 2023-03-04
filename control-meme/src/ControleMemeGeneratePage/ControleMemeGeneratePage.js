@@ -68,7 +68,7 @@ function ControleMemeGeneratePageStep1(props) {
         <div className="ControleMemeGeneratePageStep1">
             <h1>Step 1: Connect to colab backend</h1>
 
-            <p>1. Open the <a href="https://colab.research.google.com/drive/19RZzVrmBK4V0X5XADQ36Q-pKiPWcO-bF?usp=sharing">Colab Link</a> in another tab</p>
+            <p>1. Open the <a href="https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb">Colab Link</a> in another tab</p>
             <p>2. Run all the cells until are given the session link</p>
             <p>3. Copy the session link and paste it in the input below</p>
             <p>4. Click on the next button</p>
