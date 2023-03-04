@@ -21,9 +21,10 @@ const style = {
 };
 
 
-export default function ImageInfoModal({ imageInfo, imageURL, openImage, setOpenImage }) {
+export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, openImage, setOpenImage }) {
 
     const [openDetails, setOpenDetails] = React.useState(false);
+    const [displayOriginalImage, setDisplayOriginalImage] = React.useState(false);
 
     const bodyImageModale = (
         <div>
@@ -31,12 +32,18 @@ export default function ImageInfoModal({ imageInfo, imageURL, openImage, setOpen
                 <Grid item xs={6} style={{ overflow: 'scroll' }}>
 
                     <Box style={{ maxHeight: '100vh', overflow: 'auto' }}>
-                        <img src={imageURL} style={{ width: '100%', textAlign: 'center' }} alt="meme" />
+                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ maxWidth: '100vh', textAlign: 'center' }} alt="meme" />
                         <br />
-                        <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
-                        <Button fullWidth variant="contained" color='secondary' onClick={() => setOpenImage(false)}>Close</Button>
                     </Box>
                 </Grid>
+
+
+                <Grid item xs={6} style={{ overflow: 'scroll' }}>
+                </Grid>
+                <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
+                <Button fullWidth variant="contained" color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
+                <Button fullWidth variant="contained" color='secondary' onClick={() => setOpenImage(false)}>Close</Button>
+
             </Grid>
         </div >
     );
@@ -69,7 +76,12 @@ export default function ImageInfoModal({ imageInfo, imageURL, openImage, setOpen
                 open={openImage}
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
-                onClose={() => setOpenImage(false)}
+                onClose={() => {
+                    setOpenImage(false)
+                    setDisplayOriginalImage(false)
+                }
+                }
+
             >
 
 

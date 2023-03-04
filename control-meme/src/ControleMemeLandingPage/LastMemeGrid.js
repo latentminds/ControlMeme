@@ -37,8 +37,10 @@ export default function LastMemeGrid(props) {
 
             <div className="LastMemeGrid">
                 {lastMemes.map((meme, index) => {
+                    let parentURL = lastMemes
+
                     return <img src={meme.url} alt="meme" key={index} height={100} width={100}
-                        onClick={() => props.onClickImage(meme, meme.url)}
+                        onClick={() => props.onClickImage(meme, meme.url, meme.parent_url)}
                         style={{ cursor: "pointer" }}
                     />
                 })}
