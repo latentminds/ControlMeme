@@ -41,7 +41,11 @@ function ResponsiveAppBar(props) {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <img src="./android-chrome-384x384.png" sx={{ mr: 2 }}
+            style={{ maxWidth: 'auto', maxHeight: '50px', marginRight: '10px' }} />
+
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+
           <Typography
             variant="h6"
             noWrap
@@ -57,7 +61,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Meme.Koll.AI
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -92,8 +96,8 @@ function ResponsiveAppBar(props) {
               {pages.map((page) => (
                 //update current page state on click
                 <MenuItem key={page} onClick={() => {
-                    props.setCurrentPage(page)
-                    }}>
+                  props.setCurrentPage(page)
+                }}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -123,8 +127,8 @@ function ResponsiveAppBar(props) {
               <Button
                 key={page}
                 onClick={() => {
-                    props.setCurrentPage(page)
-                    }}
+                  props.setCurrentPage(page)
+                }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
