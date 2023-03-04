@@ -47,6 +47,8 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
     seed = kwargs.get("seed")
     guidance_strenght_prompt = kwargs.get("guidance_strenght_prompt")
     guidance_strenght_image = kwargs.get("guidance_strenght_image")
+    parent_url = kwargs.get("parent_url")
+
     
     # save meme variation to bucket
     
@@ -68,7 +70,8 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
             "guidance_strenght_prompt": guidance_strenght_prompt,
             "guidance_strenght_image": guidance_strenght_image,
             "timestamp": firestore.SERVER_TIMESTAMP, # type: ignore
-            "parent_uuid": parent_uuid
+            "parent_uuid": parent_uuid,
+            "parent_url": parent_url
         }
     
     db = firestore.client()    
