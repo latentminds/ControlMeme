@@ -39,7 +39,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                 <Grid item xs={6} style={{ overflow: 'scroll' }}>
 
                     <Box style={{ maxHeight: '100vh', overflow: 'auto' }}>
-                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ maxWidth: '100vh', textAlign: 'center' }} alt="meme" />
+                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ height: '512px', textAlign: 'center' }} alt="meme" />
                         <br />
                     </Box>
                 </Grid>
@@ -48,7 +48,8 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                 <Grid item xs={6} style={{ overflow: 'scroll' }}>
                 </Grid>
                 <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
-                <Button fullWidth variant="contained" color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
+                <Button
+                    fullWidth variant={displayOriginalImage ? 'filled' : 'contained'} color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
                 <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
 
             </Grid>
