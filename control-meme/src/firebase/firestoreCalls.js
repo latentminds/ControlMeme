@@ -2,30 +2,62 @@ import { db } from "./firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
 
 export const fetchLastGeneratedMemesVariations = async () => {
-    let lastVariations = [];
+    //todo: replace with better query when variation are in the db with parent_url
+
+    let variations = [];
+    let baseMemes = [];
     // collection is BaseMemes > id of the base meme > Variations
     // order by first sooner datetime
-    return await getDocs(collection(db, "Variations"))
+    // also add the url with the parent_uuid = base meme uuid
+
+    await getDocs(collection(db, "Variations"))
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let meme = doc.data();
                 meme.uuid = doc.id;
-                lastVariations.push(meme);
+                variations.push(meme);
             }
             );
-            console.log(lastVariations)
+            console.log(variations)
             //sort by date
-            lastVariations.sort((a, b) => {
+            variations.sort((a, b) => {
                 return new Date(b.timestamp.seconds) - new Date(a.timestamp.seconds);
             });
-            console.log(lastVariations)
-
-            return lastVariations;
+            console.log(variations)
         }
         )
+
+    await getDocs(collection(db, "BaseMemes"))
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let baseMeme = doc.data();
+                baseMeme.uuid = doc.id;
+                baseMemes.push(baseMeme);
+            }
+            );
+            console.log(baseMemes)
+        }
+        )
+
+    // add the parent url to the variations
+    variations.forEach((variation) => {
+        baseMemes.forEach((baseMeme) => {
+            if (variation.parent_uuid === baseMeme.uuid) {
+                variation.parent_url = baseMeme.url;
+            }
+        })
+    })
+
+    // sort by timestamp.seconds desc
+    variations.sort((a, b) => {
+        return new Date(b.timestamp.seconds) - new Date(a.timestamp.seconds);
+    });
+
+    console.log(variations);
+
+    return variations;
+
 }
-
-
 
 
 
