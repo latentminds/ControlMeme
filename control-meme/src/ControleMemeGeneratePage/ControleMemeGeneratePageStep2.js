@@ -14,9 +14,12 @@ const ParamsPanel = ({ selectedMeme,
     controlnetHintb64, setControlnetHintb64
 }) => {
 
+    const [previewButtonDisabled, setPreviewButtonDisabled] = useState(false);
+
     const DEFAULT_IMAGE_URL = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
     console.log(selectedMeme)
     const handleClickHintPreview = () => {
+        setPreviewButtonDisabled(true);
         // call api with with the following args
         const args = {
             'controlnet_basememe_url': selectedMeme.url,
@@ -39,18 +42,20 @@ const ParamsPanel = ({ selectedMeme,
             .then(data => {
                 console.log('Success:', data);
                 setControlnetHintb64(data)
+                setPreviewButtonDisabled(false);
             }
             )
             .catch((error) => {
                 console.error('Error:', error);
+                setPreviewButtonDisabled(false);
             }
             );
     }
 
     return (
         <div className="ParamsPanel">
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
+            <Grid container spacing={1}>
+                <Grid item xs={5} sx={{ m: 1 }}>
 
                     <FormControl fullWidth>
                         <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
@@ -64,6 +69,7 @@ const ParamsPanel = ({ selectedMeme,
                             id="demo-simple-select"
                             value={controlnetPreprocess}
                             onChange={(e) => setControlnetPreprocess(e.target.value)}
+                            defaultValue={"canny"}
                         >
                             <MenuItem value={"none"}>None</MenuItem>
                             <MenuItem value={"canny"}>Canny</MenuItem>
@@ -81,14 +87,23 @@ const ParamsPanel = ({ selectedMeme,
 
                         <br />
                         <label id="label-select-model">Controlnet Model</label>
+
                         <Select
                             labelId="label-select-model"
                             id="demo-simple-select"
                             value={controlnetModel}
-                            onChange={(e) => setControlnetModel(e.target.value)}
+                            onChange={(e) => setControlnetModel(e.target.value)} d
+                            defaultValue={"control_canny [e3fe7712]"}
                         >
                             <MenuItem value={"none"}>None</MenuItem>
                             <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
+                            <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
+                            <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
+                            <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
+                            <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
+                            <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
+                            <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
+                            <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem>
                         </Select>
                         <br />
 
@@ -113,20 +128,27 @@ const ParamsPanel = ({ selectedMeme,
                         />
 
                         <br />
-                        <Button variant="contained" color="primary" onClick={handleClickHintPreview}>
+                        <Button variant="contained" color="primary" onClick={handleClickHintPreview}
+                            disabled={(selectedMeme === null || controlnetPreprocess === "none") || previewButtonDisabled === true}
+                        >
                             Generate Hint Preview
                         </Button>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} sx={{ m: 1 }}>
 
-                    {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
-                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint" />}
+                    {controlnetHintb64 !== "" && <img style={{ width: "90%" }} src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
+                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL}
+                        alt="controlnet hint"
+                        className="ControlnetHint"
+                        style={{ width: "90%" }}
+                    />
+                    }
                 </Grid>
             </Grid>
 
 
-        </div>
+        </div >
     )
 }
 
@@ -147,12 +169,15 @@ export function ControleMemeGeneratePageStep2(props) {
 
     const [generatedImageb64, setGeneratedImageb64] = useState("");
 
+    const [generateButtonDisabled, setGenerateButtonDisabled] = useState(false);
+    const [addtopublicButtonDisabled, setAddtopublicButtonDisabled] = useState(false);
 
     //control_canny [e3fe7712]
 
 
     // send file to api
     const handleClickGenerate = () => {
+        setGenerateButtonDisabled(true)
         // convert steps to int
         console.log("selectedMeme", selectedMeme)
         const selectedMemeUUID = selectedMeme.uuid
@@ -180,10 +205,13 @@ export function ControleMemeGeneratePageStep2(props) {
             .then(data => {
                 console.log('Success:', data);
                 setGeneratedImageb64(data)
+                setGenerateButtonDisabled(false)
+                setAddtopublicButtonDisabled(false)
             }
             )
             .catch((error) => {
                 console.error('Error:', error);
+                setGenerateButtonDisabled(false)
             }
             );
 
@@ -191,6 +219,7 @@ export function ControleMemeGeneratePageStep2(props) {
 
     const handleClickAddToPublic = () => {
         // fetch colab link
+        setAddtopublicButtonDisabled(true)
         fetch(props.colabSessionLink + '/save_last/', {
             method: 'GET',
             headers: {
@@ -261,7 +290,9 @@ export function ControleMemeGeneratePageStep2(props) {
             <h2> 3. Generate meme !</h2>
 
             <FormControl fullWidth>
-                <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}>Generate</Button>
+                <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
+                    disabled={generateButtonDisabled === true || props.colabSessionLink === "" || selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || numInferencesSteps === "" || controlnetPreprocess === "" || controlnetModel === "" || controlnetThresholdA === "" || controlnetThresholdB === ""}>
+                    Generate</Button>
             </FormControl>
 
             <h2> 4. See IA Variation !</h2>
@@ -271,7 +302,9 @@ export function ControleMemeGeneratePageStep2(props) {
 
 
             <br />
-            <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}>Add to public gallery</Button>
-        </div>
+            <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}
+                disabled={addtopublicButtonDisabled === true || props.colabSessionLink === "" || selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || numInferencesSteps === "" || controlnetPreprocess === "" || controlnetModel === "" || controlnetThresholdA === "" || controlnetThresholdB === ""}
+            >Add to public gallery</Button>
+        </div >
     )
 }
