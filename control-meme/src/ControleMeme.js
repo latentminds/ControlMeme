@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ResponsiveAppBar from "./AppBar/ResponsiveAppBar";
+import { ControleMemeAboutPage } from "./ControleMemeAboutPage/ControleMemeAboutPage";
 import ControleMemeGeneratePage from "./ControleMemeGeneratePage/ControleMemeGeneratePage";
 import ControleMemeLandingPage from "./ControleMemeLandingPage/ControleMemeLandingPage";
 
@@ -13,13 +14,14 @@ export default function ControleMeme() {
     return (
         <div>
             <ResponsiveAppBar setCurrentPage={(newPage) => {
-                setCurrentPage(newPage)} 
-                }/>
+                setCurrentPage(newPage)
+            }
+            } />
 
 
             {currentPage === 'Browse' && <ControleMemeLandingPage />}
             {currentPage === 'Generate' && <ControleMemeGeneratePage colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink} />}
-            {currentPage === 'About' && <h1>About</h1>}
+            {currentPage === 'About' && <ControleMemeAboutPage />}
         </div>
     );
 }

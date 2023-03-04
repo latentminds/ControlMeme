@@ -122,16 +122,31 @@ function ResponsiveAppBar(props) {
           >
             Meme.Koll.AI
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ marginRight: "300px", flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "center" }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={() => {
                   props.setCurrentPage(page)
                 }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 0, color: 'white', display: 'block', mx: 6 }}
               >
-                {page}
+
+                <Typography
+                  variant="h6"
+                  sx={{
+                    mr: 2,
+                    display: { xs: 'none', md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.3rem',
+                    color: 'inherit',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <div style={{ fontSize: "1em" }}>{page}</div>
+                </Typography>
+
               </Button>
             ))}
           </Box>
