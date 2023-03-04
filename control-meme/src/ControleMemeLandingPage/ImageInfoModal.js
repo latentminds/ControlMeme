@@ -35,11 +35,11 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
 
     const bodyImageModale = (
         <div>
-            <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item xs={6} style={{ overflow: 'scroll' }}>
+            <Grid container direction="column" justify="center" alignItems="center" justifyContent="center">
+                <Grid item xs={6} style={{ overflow: 'scroll', WebkitOverflowScrolling: 'touch', overflowScrolling: "touch" }}>
 
                     <Box style={{ maxHeight: '100vh', overflow: 'auto' }}>
-                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ height: '512px', textAlign: 'center' }} alt="meme" />
+                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ height: '80vh', maxWidth: '95vw', maxHeight: '95vw', textAlign: 'center' }} alt="meme" />
                         <br />
                     </Box>
                 </Grid>
@@ -49,7 +49,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                 </Grid>
                 <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
                 <Button
-                    fullWidth variant={displayOriginalImage ? 'filled' : 'contained'} color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
+                    fullWidth variant={'contained'} color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
                 <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
 
             </Grid>
