@@ -26,6 +26,13 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
     const [openDetails, setOpenDetails] = React.useState(false);
     const [displayOriginalImage, setDisplayOriginalImage] = React.useState(false);
 
+    const handleCloseImage = () => {
+        setOpenImage(false);
+        setOpenDetails(false);
+        setDisplayOriginalImage(false);
+    };
+
+
     const bodyImageModale = (
         <div>
             <Grid container direction="column" justify="center" alignItems="center">
@@ -42,7 +49,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                 </Grid>
                 <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
                 <Button fullWidth variant="contained" color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
-                <Button fullWidth variant="contained" color='secondary' onClick={() => setOpenImage(false)}>Close</Button>
+                <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
 
             </Grid>
         </div >
@@ -62,7 +69,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                         )
                     }
                 })}
-                <Button fullWidth variant="contained" color='secondary' onClick={() => setOpenDetails(false)}>Close</Button>
+                <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
             </Box>
         </div>
     );
