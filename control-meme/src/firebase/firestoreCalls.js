@@ -4,6 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 export const fetchLastGeneratedMemesVariations = async () => {
     let lastVariations = [];
     // collection is BaseMemes > id of the base meme > Variations
+    // order by first sooner datetime
     return await getDocs(collection(db, "Variations"))
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -12,11 +13,18 @@ export const fetchLastGeneratedMemesVariations = async () => {
                 lastVariations.push(meme);
             }
             );
-            console.log(lastVariations);
+            console.log(lastVariations)
+            //sort by date
+            lastVariations.sort((a, b) => {
+                return new Date(b.timestamp.seconds) - new Date(a.timestamp.seconds);
+            });
+            console.log(lastVariations)
+
             return lastVariations;
         }
         )
 }
+
 
 
 
