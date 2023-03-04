@@ -8,5 +8,5 @@ npm run start
 
 ## Deploy
 ``` bash
-npm run build && gcloud app deploy --project controle-meme
+npm run build && gcloud app deploy --project control-meme
 ```
