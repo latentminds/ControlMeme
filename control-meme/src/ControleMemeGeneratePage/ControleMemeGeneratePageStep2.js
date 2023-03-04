@@ -71,9 +71,8 @@ const ParamsPanel = ({ selectedMeme,
                             onChange={(e) => setControlnetPreprocess(e.target.value)}
                             defaultValue={"canny"}
                         >
-                            <MenuItem value={"none"}>None</MenuItem>
                             <MenuItem value={"canny"}>Canny</MenuItem>
-                            <MenuItem value={"hed"}>HED</MenuItem>
+                            {/* <MenuItem value={"hed"}>HED</MenuItem>
                             <MenuItem value={"mlsd"}>MLSD</MenuItem>
                             <MenuItem value={"depth"}>Depth</MenuItem>
                             <MenuItem value={"depths_leres"}>Depth LERES</MenuItem>
@@ -82,7 +81,7 @@ const ParamsPanel = ({ selectedMeme,
                             <MenuItem value={"openpose_hand"}>OpenPose Hand</MenuItem>
                             <MenuItem value={"fake_skribble"}>Fake Skribble</MenuItem>
                             <MenuItem value={"segmentation"}>Segmentation</MenuItem>
-                            <MenuItem value={"pidinet"}>PIDINet</MenuItem>
+                            <MenuItem value={"pidinet"}>PIDINet</MenuItem> */}
                         </Select>
 
                         <br />
@@ -95,15 +94,14 @@ const ParamsPanel = ({ selectedMeme,
                             onChange={(e) => setControlnetModel(e.target.value)} d
                             defaultValue={"control_canny [e3fe7712]"}
                         >
-                            <MenuItem value={"none"}>None</MenuItem>
                             <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
-                            <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
+                            {/* <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
                             <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
                             <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
                             <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
                             <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
                             <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
-                            <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem>
+                            <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem> */}
                         </Select>
                         <br />
 
@@ -158,7 +156,7 @@ export function ControleMemeGeneratePageStep2(props) {
     const handleDragStart = (e) => e.preventDefault();
 
     const [prompt, setPrompt] = useState("");
-    const [numInferencesSteps, setNumInferencesSteps] = useState(50);
+    const [numInferencesSteps, setNumInferencesSteps] = useState(25);
     const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
     const [controlnetModel, setControlnetModel] = useState("none");
     const [controlnetThresholdA, setControlnetThresholdA] = useState(0);
