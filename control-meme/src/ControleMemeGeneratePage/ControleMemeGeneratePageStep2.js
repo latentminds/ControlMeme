@@ -69,7 +69,7 @@ const ParamsPanel = ({ selectedMeme,
                             id="demo-simple-select"
                             value={controlnetPreprocess}
                             onChange={(e) => setControlnetPreprocess(e.target.value)}
-                            defaultValue={"canny"}
+                            
                         >
                             <MenuItem value={"canny"}>Canny</MenuItem>
                             {/* <MenuItem value={"hed"}>HED</MenuItem>
@@ -155,12 +155,12 @@ export function ControleMemeGeneratePageStep2(props) {
 
     const handleDragStart = (e) => e.preventDefault();
 
-    const [prompt, setPrompt] = useState("");
+    const [prompt, setPrompt] = useState("Cute cat digital painting, masterpiece");
     const [numInferencesSteps, setNumInferencesSteps] = useState(25);
-    const [controlnetPreprocess, setControlnetPreprocess] = useState("none");
-    const [controlnetModel, setControlnetModel] = useState("none");
-    const [controlnetThresholdA, setControlnetThresholdA] = useState(0);
-    const [controlnetThresholdB, setControlnetThresholdB] = useState(0);
+    const [controlnetPreprocess, setControlnetPreprocess] = useState("canny");
+    const [controlnetModel, setControlnetModel] = useState("control_canny [e3fe7712]");
+    const [controlnetThresholdA, setControlnetThresholdA] = useState(30);
+    const [controlnetThresholdB, setControlnetThresholdB] = useState(100);
 
     const [selectedMeme, setSelectedMeme] = useState({ 'url': DEFAULT_IMAGE_URL });
     const [controlnetHintb64, setControlnetHintb64] = useState("");
