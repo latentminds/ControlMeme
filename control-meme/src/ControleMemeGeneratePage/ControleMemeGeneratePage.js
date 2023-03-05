@@ -12,7 +12,7 @@ import { ControleMemeGeneratePageStep2 } from "./ControleMemeGeneratePageStep2";
 
 export default function ControleMemeGeneratePage({ colabSessionLink, setColabSessionLink }) {
 
-    const STEPS = ['Colab Connection', 'Base Image Selection', 'ControleNet Generation'];
+    const STEPS = ['Colab Connection', 'ControlNet Generation'];
 
     const [currentStep, setCurrentStep] = useState(0);
     // get default value from url
