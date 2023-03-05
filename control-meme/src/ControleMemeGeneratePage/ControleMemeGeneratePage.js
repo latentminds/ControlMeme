@@ -7,7 +7,7 @@ import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { UploadImage } from "./UploadImage";
 
-import "./ControlMemeGeneratePage.css"
+
 import { ControleMemeGeneratePageStep2 } from "./ControleMemeGeneratePageStep2";
 
 export default function ControleMemeGeneratePage({ colabSessionLink, setColabSessionLink }) {

@@ -13,6 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
+import "./ResponsiveAppBar.css"
+
 const pages = ['Browse', 'Generate', 'About'];
 const settings = ['Anonymous Account', 'Comming Soon !'];
 
@@ -38,7 +40,7 @@ function ResponsiveAppBar(props) {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ background: '#fcfcfc' }} className="AppBar" elevation={0} >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img src="./android-chrome-384x384.png" sx={{ mr: 2 }}
@@ -61,7 +63,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            Meme.Koll.AI
+            ControlMeme
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -120,7 +122,7 @@ function ResponsiveAppBar(props) {
               textDecoration: 'none',
             }}
           >
-            Meme.Koll.AI
+            ControlMeme
           </Typography>
           <Box sx={{ marginRight: "300px", flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: "center" }}>
             {pages.map((page) => (

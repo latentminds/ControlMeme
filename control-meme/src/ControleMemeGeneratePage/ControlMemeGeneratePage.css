@@ -1,6 +1,16 @@
+.MemeSelector {
+    overflow: auto;
+    height: 40em;
+    background-color: rgb(192, 192, 192);
+}
+
 .MemeSelectionImage {
     position: relative;
     height: 10em;
+    width: 10em;
+    margin: 5px;
+    border: solid 1px black;
+    object-fit: cover;
 }
 
 .MemeSelectionImage:hover {
@@ -9,6 +19,10 @@
 }
 
 .SelectedMeme {
-    height: 30em;
+    margin-top: 3em;
+    height: 20em;
+    width: auto;
     aspect-ratio: auto;
+    box-shadow: 0 30px 50px rgba(0,0,0,.5);
+    margin-bottom: 5em;
 }

@@ -1,7 +1,7 @@
 import { Button, FormControl, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
 import { useState } from "react";
-import AliceCarousel from "react-alice-carousel";
 
+import "./ControlMemeGeneratePage.css"
 
 const ParamsPanel = ({ selectedMeme,
     colabSessionLink,
@@ -253,17 +253,10 @@ export function ControleMemeGeneratePageStep2(props) {
             <TextField label="Colab Session Link" variant="outlined" value={props.colabSessionLink} onChange={(e) => props.setColabSessionLink(e.target.value)} />
 
             <h2>1. Select a base image</h2>
-            <AliceCarousel items={items} mouseTracking keyboardNavigation responsive={
-                {
-                    0: {
-                        items: 1,
-                    },
-                    1024: {
-                        items: 5,
-                        itemsFit: 'contain',
-                    }
-                }}
-            />
+
+            <div className="MemeSelector">
+                {items}
+            </div>
 
             <img src={selectedMeme.url} className="SelectedMeme" />
 
