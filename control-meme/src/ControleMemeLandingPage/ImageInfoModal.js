@@ -49,7 +49,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                 </Grid>
                 <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
                 <Button
-                    fullWidth variant={'contained'} color="success" onClick={() => set (!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
+                    fullWidth variant={'contained'} color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
                 <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
 
             </Grid>
