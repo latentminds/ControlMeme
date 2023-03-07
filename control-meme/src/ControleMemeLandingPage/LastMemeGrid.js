@@ -4,8 +4,6 @@ import TextField from '@mui/material/TextField'
 import Search from '@mui/icons-material/Search'
 import InputAdornment from '@mui/material/InputAdornment';
 
-import './LastMemeGrid.css'
-
 import { useEffect, useState } from "react";
 // Composant that displays the last memes
 // fetches the last 10 memes from the firestore db
@@ -47,7 +45,7 @@ export default function LastMemeGrid(props) {
     // }
     const style = {
         GeneratedMeme_img : {
-            width: '20em',
+            width: '18em',
             height: 'auto',
             margin: 'auto',
             cursor: "pointer"

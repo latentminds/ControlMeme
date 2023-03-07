@@ -1,11 +1,11 @@
 .GeneratedMeme img {
-    width: 20em;
+    width: 25em;
     height: auto;
     margin: auto;
 }
 
 .GeneratedMeme {
-    margin: 0.5em;
+    margin: 1em;
     display: flex;
 }
 
