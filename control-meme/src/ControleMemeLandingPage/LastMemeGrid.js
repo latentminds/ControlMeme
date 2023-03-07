@@ -20,6 +20,56 @@ export default function LastMemeGrid(props) {
         ))
     }, [])
 
+    //css
+    // .GeneratedMeme img {
+    //     width: 20em;
+    //     height: auto;
+    //     margin: auto;
+    // }
+    
+    // .GeneratedMeme {
+    //     margin: 0.5em;
+    //     display: flex;
+    // }
+    
+    // .LastMemeGrid {
+    //     padding-top: 2em;
+    //     display: flex;
+    //     flex-wrap: wrap;
+    //     flex-direction: row;
+    
+    //     max-width: 100em;
+    
+    //     margin-left: auto;
+    //     margin-right: auto;
+    
+    //     justify-content: center
+    // }
+    const style = {
+        GeneratedMeme_img : {
+            width: '20em',
+            height: 'auto',
+            margin: 'auto',
+            cursor: "pointer"
+        },
+        GeneratedMeme : {
+            margin: '0.5em',
+            display: 'flex'
+        },
+        LastMemeGrid : {
+            paddingTop: '2em',
+            display: 'flex',
+            flexWrap: 'wrap',
+            flexDirection: 'row',
+            maxWidth: '100em',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            justifyContent: 'center'
+        }
+    }
+
+
+
     return (
         <>
             {/* <TextField
@@ -34,12 +84,12 @@ export default function LastMemeGrid(props) {
                 }}
             /> */}
 
-            <div className="LastMemeGrid">
+            <div style={style.LastMemeGrid}>
                 {lastMemes.map((meme, index) => {
-                    return <div className="GeneratedMeme">
+                    return <div className style={style.GeneratedMeme}>
                         <img src={meme.url} alt="meme" key={index}
                             onClick={() => props.onClickImage(meme, meme.url, meme.parent_url)}
-                            style={{ cursor: "pointer" }}
+                            style={style.GeneratedMeme_img}
                         />
                     </div>
                 })}
