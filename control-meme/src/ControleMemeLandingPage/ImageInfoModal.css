@@ -1,29 +1,41 @@
-.contotn {
+.modalImage {
     position: absolute;
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 
-    justify-content: center;
-    text-align: center;
+    max-height: 80vh;
+
+    height: 80vw;
+    width: auto;
 }
 
-.contotn img {
+.modalImage img {
     cursor: pointer;
 
-    height: 65vh;
+    max-height: 80vh;
+
+    height: 80vw;
     width: auto;
-
-    box-shadow: 0 0 300px rgb(0, 0, 0);
-
 }
 
-.contotn button {
-    position: absolute;
+.hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.modalImage button {
+    position: relative;
     width: 150px;
-    top: calc(65vh + 20px);
+    bottom: -20px;
     left: calc(50% - 75px);
+    z-index: 20;
 }
 
 .boxDetailModal {

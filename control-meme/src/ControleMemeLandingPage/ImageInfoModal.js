@@ -22,24 +22,27 @@ const style = {
 
 };
 
-
 export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, openImage, setOpenImage }) {
 
     const [openDetails, setOpenDetails] = React.useState(false);
     const [displayOriginalImage, setDisplayOriginalImage] = React.useState(false);
 
-    const handleCloseImage = () => {
-        setOpenImage(false);
-        setOpenDetails(false);
-        setDisplayOriginalImage(false);
-    };
-
 
     const bodyImageModale = (
-        <div className="contotn">
-            <img onClick={() => setDisplayOriginalImage(!displayOriginalImage)} src={displayOriginalImage ? imageInfo.parent_url : imageURL} alt="meme" />
-            <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
-        </div>
+        <>
+            <div className="modalImage">
+                <img src={imageURL} alt="variation" id="variationMeme" />
+                <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
+            </div>
+
+            {
+                imageInfo != null && imageInfo.parent_url != null &&
+                <div className="modalImage">
+                    <img onClick={() => setDisplayOriginalImage(!displayOriginalImage)} src={imageInfo.parent_url}
+                        className={!displayOriginalImage ? 'hidden' : 'visible'} alt="original" style={{ zIndex: 10 }} />
+                </div>
+            }
+        </>
     );
 
     const bodyDetailsModale = (
