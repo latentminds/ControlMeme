@@ -1,0 +1,42 @@
+.contotn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    justify-content: center;
+    text-align: center;
+}
+
+.contotn img {
+    cursor: pointer;
+
+    height: 65vh;
+    width: auto;
+
+    box-shadow: 0 0 300px rgb(0, 0, 0);
+
+}
+
+.contotn button {
+    position: absolute;
+    width: 150px;
+    top: calc(65vh + 20px);
+    left: calc(50% - 75px);
+}
+
+.boxDetailModal {
+    position: 'absolute';
+    top: '50%';
+    left: '50%';
+    transform: 'translate(-50%; -50%)';
+    width: 400;
+    background-color: 'background.paper';
+    border: '2px solid #000';
+    box-shadow: 24;
+    p: 4;
+    overflow: 'scroll';
+    max-height: '100vh';
+    overflow: 'auto'
+};

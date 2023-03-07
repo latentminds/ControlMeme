@@ -16,7 +16,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import "./ResponsiveAppBar.css"
 
 const pages = ['Browse', 'Generate', 'About'];
-const settings = ['Anonymous Account', 'Comming Soon !'];
+const settings = ['Anonymous Account', 'Coming Soon !'];
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

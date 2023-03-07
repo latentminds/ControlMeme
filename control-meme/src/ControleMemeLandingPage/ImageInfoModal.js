@@ -6,6 +6,8 @@
 import React from 'react';
 import { Box, Button, Grid, Modal, Typography } from '@mui/material';
 
+import './ImageInfoModal.css'
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -34,26 +36,10 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
 
 
     const bodyImageModale = (
-        <div>
-            <Grid container direction="column" justify="center" alignItems="center" justifyContent="center">
-                <Grid item xs={6} style={{ overflow: 'scroll', WebkitOverflowScrolling: 'touch', overflowScrolling: "touch" }}>
-
-                    <Box style={{ maxHeight: '100vh', overflow: 'auto' }}>
-                        <img src={displayOriginalImage ? imageInfo.parent_url : imageURL} style={{ height: '80vh', maxWidth: '95vw', maxHeight: '95vw', textAlign: 'center' }} alt="meme" />
-                        <br />
-                    </Box>
-                </Grid>
-
-
-                <Grid item xs={6} style={{ overflow: 'scroll' }}>
-                </Grid>
-                <Button fullWidth variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
-                <Button
-                    fullWidth variant={'contained'} color="success" onClick={() => setDisplayOriginalImage(!displayOriginalImage)}>{displayOriginalImage ? 'Display Variation' : 'Display Original Image'}</Button>
-                <Button fullWidth variant="contained" color='secondary' onClick={() => handleCloseImage()}>Close</Button>
-
-            </Grid>
-        </div >
+        <div className="contotn">
+            <img onClick={() => setDisplayOriginalImage(!displayOriginalImage)} src={displayOriginalImage ? imageInfo.parent_url : imageURL} alt="meme" />
+            <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
+        </div>
     );
 
     const bodyDetailsModale = (
@@ -70,7 +56,6 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                         )
                     }
                 })}
-                <Button fullWidth variant="contained" color='secondary' onClick={() => setOpenDetails(false)}>Close</Button>
             </Box>
         </div>
     );

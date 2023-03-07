@@ -135,13 +135,9 @@ const ParamsPanel = ({ selectedMeme,
                 </Grid>
                 <Grid item xs={6} sx={{ m: 1 }}>
 
-                    {controlnetHintb64 !== "" && <img style={{ width: "90%" }} src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
-                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL}
-                        alt="controlnet hint"
-                        className="ControlnetHint"
-                        style={{ width: "90%" }}
-                    />
-                    }
+                    {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
+                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint"/>}
+
                 </Grid>
             </Grid>
 
@@ -189,7 +185,7 @@ export function ControleMemeGeneratePageStep2(props) {
             "controlnet_threshold_a": controlnetThresholdA,
             "controlnet_threshold_b": controlnetThresholdB
         }
-        console.log(args)
+
         // call api and get base64 image response
         fetch(props.colabSessionLink + '/', {
             method: 'POST',
@@ -249,8 +245,6 @@ export function ControleMemeGeneratePageStep2(props) {
 
     return (
         <div className="ControleMemeGeneratePageStep2">
-            <h1>Step 2</h1>
-            <TextField label="Colab Session Link" variant="outlined" value={props.colabSessionLink} onChange={(e) => props.setColabSessionLink(e.target.value)} />
 
             <h2>1. Select a base image</h2>
 
@@ -286,11 +280,12 @@ export function ControleMemeGeneratePageStep2(props) {
                     Generate</Button>
             </FormControl>
 
-            <h2> 4. See IA Variation !</h2>
+            <h2> 4. See AI Variation !</h2>
 
-            {generatedImageb64 !== "" && <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme" />}
-            {generatedImageb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="generated image" className="GeneratedMeme" />}
-
+            <div className="generatedMeme">
+                {generatedImageb64 !== "" && <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme" />}
+                {generatedImageb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="generated image" className="GeneratedMeme" />}
+            </div>
 
             <br />
             <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}
