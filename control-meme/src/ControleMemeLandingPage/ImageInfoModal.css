@@ -23,18 +23,46 @@
     transition: opacity 0.5s ease-in-out;
 }
 
-.modalImage img {
+.placeholder {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
     max-height: 80vh;
+
     height: 80vw;
-    opacity: 0;
+    width: 0;
+    
+    background-color: cadetblue;
 }
 
-.modalImage button {
-    position: relative;
+.placeholder img {
+    max-height: 80vh;
+    height: 80vw;
+    width: auto;
+    display: none;
+}
+
+.placeholder button {
+    position: absolute;
     width: 150px;
-    bottom: -20px;
+    bottom: -50px;
     left: calc(50% - 75px);
     z-index: 20;
+}
+
+.placeholder p {
+    position: absolute;
+    width: 500px;
+    text-align: center;
+    top: -50px;
+    left: calc(-250px);
+    z-index: 20;
+    color: white;
+    font-weight: 800;
+    font-size: large;
 }
 
 .boxDetailModal {

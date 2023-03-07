@@ -1,7 +1,12 @@
-.GeneratedMeme {
-    height: 100%;
+.GeneratedMeme img {
     width: 20em;
-    margin: 1em;
+    height: auto;
+    margin: auto;
+}
+
+.GeneratedMeme {
+    margin: 0.5em;
+    display: flex;
 }
 
 .LastMemeGrid {

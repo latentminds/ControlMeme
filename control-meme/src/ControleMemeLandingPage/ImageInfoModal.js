@@ -38,9 +38,10 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                     className={`modalImage ${!displayOriginalImage ? 'hidden' : 'visible'}`} alt="original" style={{ zIndex: 10 }} />
             }
 
-            <div className='modalImage'>
+            <div className='placeholder'>
                 <img src={imageURL}/>
                 <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
+                <p>Click on the image to reveal the original</p>
             </div>
         </>
     );
