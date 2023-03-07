@@ -30,7 +30,7 @@
 }
 
 .MemeSelector .SelectedMeme {
-    border: 10px solid rgb(29, 72, 129);
+    border: 0.4em solid rgb(29, 72, 129);
     box-sizing: border-box;
 }
 
