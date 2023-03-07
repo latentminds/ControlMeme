@@ -120,7 +120,7 @@ const ParamsPanel = ({ selectedMeme,
                 <Grid item xs={6} sx={{ m: 1 }}>
 
                     {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
-                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint"/>}
+                    {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint" />}
 
                 </Grid>
             </Grid>
@@ -220,8 +220,7 @@ export function ControleMemeGeneratePageStep2(props) {
     // create img list from baseMemesUrls
     const items = props.baseMemes.map((baseMeme, index) => {
         return (
-            <img src={baseMeme.url} className="MemeSelectionImage selected" onDragStart={handleDragStart} alt='' role="presentation" onClick={() => setSelectedMeme(baseMeme)
-            } />
+            <img className={selectedMeme.url == baseMeme.url ? "SelectedMeme" : ""} src={baseMeme.url} onDragStart={handleDragStart} role="presentation" onClick={() => setSelectedMeme(baseMeme)} />
         )
     })
 
@@ -233,10 +232,10 @@ export function ControleMemeGeneratePageStep2(props) {
             <h2>1. Select a base image</h2>
 
             <div className="MemeSelector">
-                {items}
+                <span>
+                    {items}
+                </span>
             </div>
-
-            <img src={selectedMeme.url} className="SelectedMeme" />
 
             <h2> 2. Add a prompt and params</h2>
             {/* Display side by side */}
@@ -259,24 +258,24 @@ export function ControleMemeGeneratePageStep2(props) {
             <h2> 3. Generate meme !</h2>
 
             <FormControl fullWidth>
-            <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
 
-            <Select
-                            labelId="label-select-model"
-                            id="demo-simple-select"
-                            value={controlnetModel}
-                            onChange={(e) => setControlnetModel(e.target.value)} d
-                            defaultValue={"control_canny [e3fe7712]"}
-                        >
-                            <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
-                            {/* <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
+                <Select
+                    labelId="label-select-model"
+                    id="demo-simple-select"
+                    value={controlnetModel}
+                    onChange={(e) => setControlnetModel(e.target.value)} d
+                    defaultValue={"control_canny [e3fe7712]"}
+                >
+                    <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
+                    {/* <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
                             <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
                             <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
                             <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
                             <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
                             <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
                             <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem> */}
-                        </Select>
+                </Select>
                 <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
                     disabled={generateButtonDisabled === true || props.colabSessionLink === "" || selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || numInferencesSteps === "" || controlnetPreprocess === "" || controlnetModel === "" || controlnetThresholdA === "" || controlnetThresholdB === ""}>
                     Generate</Button>

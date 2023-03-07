@@ -1,37 +1,43 @@
 .MemeSelector {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     max-width: 100em;
     margin: auto;
-    height: 40em;
-    background-color: rgb(192, 192, 192);
+    height: 33.5em;
+    background-color: rgb(233, 233, 233);
 }
 
-.MemeSelectionImage {
-    position: relative;
+.MemeSelector span {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 34em;
+}
+
+.MemeSelector img {
     height: 10em;
     width: 10em;
     margin: 5px;
     border: solid 1px black;
     object-fit: cover;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
-.MemeSelectionImage:hover {
+.MemeSelector img:hover {
     transform: scale(1.05);
     cursor: pointer;
 }
 
-.SelectedMeme {
-    margin-top: 3em;
-    height: 20em;
-    width: auto;
-    aspect-ratio: auto;
-    box-shadow: 0 30px 50px rgba(0,0,0,.5);
-    margin-bottom: 5em;
+.MemeSelector .SelectedMeme {
+    border: 10px solid rgb(29, 72, 129);
+    box-sizing: border-box;
 }
 
 .generatedMeme img {
     height: 100%;
     width: 50em;
+    margin: auto;
 }
 
 .ControlnetHint {
