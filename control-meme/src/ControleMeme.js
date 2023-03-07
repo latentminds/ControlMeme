@@ -18,10 +18,11 @@ export default function ControleMeme() {
             }
             } />
 
-
-            {currentPage === 'Browse' && <ControleMemeLandingPage />}
-            {currentPage === 'Generate' && <ControleMemeGeneratePage colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink} />}
-            {currentPage === 'About' && <ControleMemeAboutPage />}
+            <div className="content">
+                {currentPage === 'Browse' && <ControleMemeLandingPage />}
+                {currentPage === 'Generate' && <ControleMemeGeneratePage colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink} />}
+                {currentPage === 'About' && <ControleMemeAboutPage />}
+            </div>
         </div>
     );
 }
