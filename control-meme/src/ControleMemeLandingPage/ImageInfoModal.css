@@ -1,18 +1,11 @@
 .modalImage {
+    cursor: pointer;
+
     position: absolute;
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-
-    max-height: 80vh;
-
-    height: 80vw;
-    width: auto;
-}
-
-.modalImage img {
-    cursor: pointer;
 
     max-height: 80vh;
 
@@ -28,6 +21,12 @@
 .visible {
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+}
+
+.modalImage img {
+    max-height: 80vh;
+    height: 80vw;
+    opacity: 0;
 }
 
 .modalImage button {

@@ -30,18 +30,18 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
 
     const bodyImageModale = (
         <>
-            <div className="modalImage">
-                <img src={imageURL} alt="variation" id="variationMeme" />
-                <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
-            </div>
+            <img src={imageURL} alt="variation" id="variationMeme" className="modalImage" />
 
             {
                 imageInfo != null && imageInfo.parent_url != null &&
-                <div className="modalImage">
-                    <img onClick={() => setDisplayOriginalImage(!displayOriginalImage)} src={imageInfo.parent_url}
-                        className={!displayOriginalImage ? 'hidden' : 'visible'} alt="original" style={{ zIndex: 10 }} />
-                </div>
+                <img onClick={() => setDisplayOriginalImage(!displayOriginalImage)} src={imageInfo.parent_url}
+                    className={`modalImage ${!displayOriginalImage ? 'hidden' : 'visible'}`} alt="original" style={{ zIndex: 10 }} />
             }
+
+            <div className='modalImage'>
+                <img src={imageURL}/>
+                <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
+            </div>
         </>
     );
 
