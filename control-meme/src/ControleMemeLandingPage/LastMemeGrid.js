@@ -18,31 +18,6 @@ export default function LastMemeGrid(props) {
         ))
     }, [])
 
-    //css
-    // .GeneratedMeme img {
-    //     width: 20em;
-    //     height: auto;
-    //     margin: auto;
-    // }
-    
-    // .GeneratedMeme {
-    //     margin: 0.5em;
-    //     display: flex;
-    // }
-    
-    // .LastMemeGrid {
-    //     padding-top: 2em;
-    //     display: flex;
-    //     flex-wrap: wrap;
-    //     flex-direction: row;
-    
-    //     max-width: 100em;
-    
-    //     margin-left: auto;
-    //     margin-right: auto;
-    
-    //     justify-content: center
-    // }
     const style = {
         GeneratedMeme_img : {
             width: '18em',
