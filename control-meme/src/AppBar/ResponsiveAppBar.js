@@ -16,7 +16,6 @@ import AdbIcon from '@mui/icons-material/Adb';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Search from '@mui/icons-material/Search'
 
 import "./ResponsiveAppBar.css"
 
@@ -156,20 +155,6 @@ function ResponsiveAppBar(props) {
 
               </Button>
             ))}
-          </Box>
-
-          <Box>
-            <TextField
-              id="standard-basic"
-              placeholder="Search meme"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ color: 'white'}}/>
-                  </InputAdornment>
-                ),
-              }}
-            />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
