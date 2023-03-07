@@ -58,7 +58,6 @@ const ParamsPanel = ({ selectedMeme,
                 <Grid item xs={5} sx={{ m: 1 }}>
 
                     <FormControl fullWidth>
-                        <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
                         <br />
                         <TextField label="Num Inferences Steps" type="number" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
                         <br />
@@ -69,7 +68,7 @@ const ParamsPanel = ({ selectedMeme,
                             id="demo-simple-select"
                             value={controlnetPreprocess}
                             onChange={(e) => setControlnetPreprocess(e.target.value)}
-
+                            defaultValue="canny"
                         >
                             <MenuItem value={"canny"}>Canny</MenuItem>
                             {/* <MenuItem value={"hed"}>HED</MenuItem>
@@ -87,22 +86,7 @@ const ParamsPanel = ({ selectedMeme,
                         <br />
                         <label id="label-select-model">Controlnet Model</label>
 
-                        <Select
-                            labelId="label-select-model"
-                            id="demo-simple-select"
-                            value={controlnetModel}
-                            onChange={(e) => setControlnetModel(e.target.value)} d
-                            defaultValue={"control_canny [e3fe7712]"}
-                        >
-                            <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
-                            {/* <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
-                            <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
-                            <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
-                            <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
-                            <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
-                            <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
-                            <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem> */}
-                        </Select>
+
                         <br />
 
                         <Slider
@@ -275,6 +259,24 @@ export function ControleMemeGeneratePageStep2(props) {
             <h2> 3. Generate meme !</h2>
 
             <FormControl fullWidth>
+            <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+
+            <Select
+                            labelId="label-select-model"
+                            id="demo-simple-select"
+                            value={controlnetModel}
+                            onChange={(e) => setControlnetModel(e.target.value)} d
+                            defaultValue={"control_canny [e3fe7712]"}
+                        >
+                            <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
+                            {/* <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
+                            <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
+                            <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
+                            <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
+                            <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
+                            <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
+                            <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem> */}
+                        </Select>
                 <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
                     disabled={generateButtonDisabled === true || props.colabSessionLink === "" || selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || numInferencesSteps === "" || controlnetPreprocess === "" || controlnetModel === "" || controlnetThresholdA === "" || controlnetThresholdB === ""}>
                     Generate</Button>
