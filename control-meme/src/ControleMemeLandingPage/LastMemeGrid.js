@@ -44,6 +44,7 @@ export default function LastMemeGrid(props) {
         }
     }
 
+    // TODO: find a better way to do this
     useEffect(() => {
         if (lastMemes.length > 1) {
             if (lastMemes[lastMemes.length - 1].url === "https://storage.googleapis.com/control-meme-public/meme_variation_20230302-154342.jpeg") {
