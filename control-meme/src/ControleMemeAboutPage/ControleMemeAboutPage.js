@@ -11,6 +11,10 @@ export const ControleMemeAboutPage = () => {
                 </a>
             </p>
             <p>You can <a href="https://discord.gg/Twqvecb7"> Join our Discord</a> to follow for updates and give feedback.</p>
+            {/* Authors */}
+            <h2>Authors</h2>
+            <p> Philippe Saade:  <a href="https://github.com/PhilSad">GitHub</a>  <a href="https://www.linkedin.com/in/philippe-saad%C3%A9-26972b149/">LinkedIn</a> </p>
+            <p> Ruben Gres: <a href="https://github.com/RubenGres">GitHub</a> <a href="https://www.linkedin.com/in/ruben-gres-484930158/">LinkedIn </a> </p>
         </div>
     );
 };

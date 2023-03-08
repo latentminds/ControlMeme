@@ -56,7 +56,7 @@ function ControleMemeGeneratePageStep1(props) {
 
             <br></br>
 
-            <a target="_blank" href="https://colab.research.google.com/github/https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb">
+            <a target="_blank" href="https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb">
                 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" />
             </a>
 
