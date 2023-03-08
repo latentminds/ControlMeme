@@ -8,7 +8,7 @@ flask --debug run --app main
 
 ## Deploy
 ``` bash
-gcloud run deploy controle-meme-back --source=. --project=control-meme --region=us-central
+gcloud run deploy controle-meme-back --source=. --project=control-meme --region=us-central1
 ```
 
 ## API Documentation

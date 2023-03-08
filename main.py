@@ -34,9 +34,8 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-
 def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
-    
+
     # get kwargs
     prompt = kwargs.get("prompt")
     controlnetPreprocess = kwargs.get("controlnetPreprocess")
@@ -49,9 +48,8 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
     guidance_strenght_image = kwargs.get("guidance_strenght_image")
     parent_url = kwargs.get("parent_url")
 
-    
     # save meme variation to bucket
-    
+
     formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
     bucket_save_path = "meme_variation_" + formated_timestamp + ".jpeg"
     blob = bucket.blob(bucket_save_path)
@@ -59,34 +57,33 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
     url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
 
     variation_data = {
-            "url": url,
-            "prompt": prompt,
-            "controlnetPreprocess": controlnetPreprocess,
-            "controlnetModel": controlnetModel,
-            "baseModel": baseModel,
-            "nb_steps": nb_steps,
-            "sampler": sampler,
-            "seed": seed,
-            "guidance_strenght_prompt": guidance_strenght_prompt,
-            "guidance_strenght_image": guidance_strenght_image,
-            "timestamp": firestore.SERVER_TIMESTAMP, # type: ignore
-            "parent_uuid": parent_uuid,
-            "parent_url": parent_url
-        }
-    
-    db = firestore.client()    
+        "url": url,
+        "prompt": prompt,
+        "controlnetPreprocess": controlnetPreprocess,
+        "controlnetModel": controlnetModel,
+        "baseModel": baseModel,
+        "nb_steps": nb_steps,
+        "sampler": sampler,
+        "seed": seed,
+        "guidance_strenght_prompt": guidance_strenght_prompt,
+        "guidance_strenght_image": guidance_strenght_image,
+        "timestamp": firestore.SERVER_TIMESTAMP,  # type: ignore
+        "parent_uuid": parent_uuid,
+        "parent_url": parent_url
+    }
+
+    db = firestore.client()
     # save meme variation to firestore in the Variations collection with parent memeID in attribute parent_uuid
     doc_ref = db.collection("Variations").document()
     doc_ref.set(variation_data)
-    
+
     # save meme variation to firestore as a child of the meme with id memeID
-    doc_ref = db.collection("BaseMemes").document(parent_uuid).collection("Variations").document()
+    doc_ref = db.collection("BaseMemes").document(
+        parent_uuid).collection("Variations").document()
     doc_ref.set(variation_data)
-    
-    
 
 
-#route to add a new meme variation to memeID
+# route to add a new meme variation to memeID
 @app.route("/api/save_variation/", methods=["POST"])
 def add_variation():
     """
@@ -109,36 +106,35 @@ def add_variation():
     seed = args.get("seed")
     guidance_strenght_prompt = args.get("guidance_strenght_prompt")
     guidance_strenght_image = args.get("guidance_strenght_image")
+    parent_url = args.get("parent_url")
+
     print('here')
     # Todo add image fast validation
     random_name = str(random.randint(0, 10000))
-    #save to jpeg
+    # save to jpeg
     path = f"./{random_name}.jpeg"
     with open(path, 'wb') as f:
         f.write(base64.b64decode(fileb64))
 
+    add_variation_to_data(path, memeID,
+                          prompt=prompt,
+                          controlnetPreprocess=controlnetPreprocess,
+                          controlnetModel=controlnetModel,
+                          baseModel=baseModel,
+                          nb_steps=nb_steps,
+                          sampler=sampler,
+                          seed=seed,
+                          guidance_strenght_prompt=guidance_strenght_prompt,
+                          guidance_strenght_image=guidance_strenght_image,
+                          parent_url=parent_url
+                          )
 
-    add_variation_to_data(path, memeID, 
-                          prompt=prompt, 
-                          controlnetPreprocess=controlnetPreprocess, 
-                          controlnetModel=controlnetModel, 
-                          baseModel=baseModel, 
-                          nb_steps=nb_steps, 
-                          sampler=sampler, 
-                          seed=seed, 
-                          guidance_strenght_prompt=guidance_strenght_prompt, 
-                          guidance_strenght_image=guidance_strenght_image)
-    
     os.remove(path)
-    
+
     # save base64 image to storage
-    
+
     return "success"
 # call example with requests and params as form data
-
-    
-
-
 
 
 # # route to generate meme
@@ -150,9 +146,9 @@ def add_variation():
 #     Send a POST request to colabLink with base64 image and args as post data
 #     params get: colabLink:str, baseImageOrigin:str
 #     params post: base_image: str base64,  args: dict
-#     args: prompt:str, controlnetPreprocess:str, controlnetModel:str 
+#     args: prompt:str, controlnetPreprocess:str, controlnetModel:str
 #     """
-    
+
 #     # get post data from form
 #     base_image = request.form.get("file")
 #     args = request.form.get("args")
@@ -175,24 +171,24 @@ def add_variation():
 #                 "controlnetPreprocess": args.get("controlnetPreprocess"),
 #                 "controlnetModel": args.get("controlnetModel"),
 #                 "timestamp": firestore.SERVER_TIMESTAMP,
-                
+
 #             }
 #         )
 #         # those values are sent by client if base_image_origin is "storage"
 #         args["parent_uuid"] = doc_ref.id
 #         args["base_image_link"] = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
-        
-    
+
+
 #     # send a post request to colabLink with base64 image and args as post data
 #     response = requests.post(colabLink, json=args)
-    
+
 #     # save response image to storage
 #     formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
 #     bucket_save_path = "meme_" + formated_timestamp + ".png"
 #     blob = bucket.blob(bucket_save_path)
 #     blob.upload_from_string(response.text, content_type="image/png")
 #     meme_url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
-    
+
 #     # save generated meme as a child of the base image
 #     db = firestore.client()
 #     doc_ref= db.collection("AIMemes").document()
@@ -204,14 +200,12 @@ def add_variation():
 #             "controlnetModel": args.get("controlnetModel"),
 #             "timestamp": firestore.SERVER_TIMESTAMP,
 #             "parent_uuid": args.get("parent_uuid")
-            
+
 #         }
 #     )
-    
+
 #     # return response image
 #     return meme_url
-
-
 
 
 if __name__ == '__main__':
