@@ -59,8 +59,6 @@ const ParamsPanel = ({ selectedMeme,
 
                     <FormControl fullWidth>
                         <br />
-                        <TextField label="Num Inferences Steps" type="number" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
-                        <br />
                         {/* Select one of canny, hed, mlsd, depth, depths_leres, normal_map, openpose, openpose_hand, fake_skribble, segmentation, pidinet */}
                         <label id="label-select-preprocess">Controlnet Preprocess</label>
                         <Select
@@ -84,11 +82,10 @@ const ParamsPanel = ({ selectedMeme,
                         </Select>
 
                         <br />
-                        <label id="label-select-model">Controlnet Model</label>
 
 
                         <br />
-
+                        <label id="label-select-threshold-a">Preprocess Threshold A</label>
                         <Slider
                             defaultValue={controlnetThresholdA}
                             aria-labelledby="continuous-slider-A"
@@ -99,6 +96,7 @@ const ParamsPanel = ({ selectedMeme,
                             onChangeCommitted={(e, value) => setControlnetThresholdA(value)}
                         />
                         <br />
+                        <label id="label-select-threshold-b">Preprocess Threshold B</label>
                         <Slider
                             defaultValue={controlnetThresholdB}
                             aria-labelledby="continuous-slider-B"
@@ -237,7 +235,7 @@ export function ControleMemeGeneratePageStep2(props) {
                 </span>
             </div>
 
-            <h2> 2. Add a prompt and params</h2>
+            <h2> 2. Select & Preview Preprocess</h2>
             {/* Display side by side */}
             <div className="ParamsPanel">
                 <ParamsPanel
@@ -255,11 +253,14 @@ export function ControleMemeGeneratePageStep2(props) {
 
             </div>
 
-            <h2> 3. Generate meme !</h2>
+            <h2> 3. Generate Meme !</h2>
 
             <FormControl fullWidth>
                 <TextField label="Prompt" variant="outlined" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-
+                <br />
+                <TextField label="Num Inferences Steps" type="number" variant="outlined" value={numInferencesSteps} onChange={(e) => setNumInferencesSteps(e.target.value)} />
+                <br />
+                <label id="label-select-model">Controlnet Model</label>
                 <Select
                     labelId="label-select-model"
                     id="demo-simple-select"
@@ -281,7 +282,7 @@ export function ControleMemeGeneratePageStep2(props) {
                     Generate</Button>
             </FormControl>
 
-            <h2> 4. See AI Variation !</h2>
+            <h2> 4. See AI Variation </h2>
 
             <div className="generatedMeme">
                 {generatedImageb64 !== "" && <img src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image" className="GeneratedMeme" />}
