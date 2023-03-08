@@ -8,7 +8,7 @@ flask --debug run --app main
 
 ## Deploy
 ``` bash
-gcloud app deploy --project controle-meme
+gcloud run deploy controle-meme-back --source=. --project=control-meme --region=us-central
 ```
 
 ## API Documentation
@@ -37,6 +37,8 @@ Add a new meme variation to memeID
     - seed:int
     - guidance_strenght_prompt:float
     - guidance_strenght_image:float
+    - parent_uuid
+    - parent_url
 
 
 ``` python
