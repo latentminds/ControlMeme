@@ -32,7 +32,10 @@ export default function ControleMemeLandingPage(props) {
                 setShowModalImageInfo={setShowModalImageInfo}
                 onClickImage={handleOpenModalImageInfo}
                 setClickedImageParentUrl={setClickedImageParentUrl}
-                parentImageURL={clickedImageParentUrl} />
+                parentImageURL={clickedImageParentUrl}
+                lastMemes={props.lastMemes}
+                setLastMemes={props.setLastMemes}
+            />
         </div>
     )
 }

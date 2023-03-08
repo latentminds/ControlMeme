@@ -11,15 +11,11 @@ import { useEffect, useState } from "react";
 // fetches the last 10 memes from the firestore db
 export default function LastMemeGrid(props) {
 
-    const [lastMemes, setLastMemes] = useState([]);
     const [paginationHasMore, setPaginationHasMore] = useState(true);
 
-    useEffect(() => {
-        fetchVariationPaginated().then((lastMemes => {
-            setLastMemes(lastMemes);
-        }
-        ))
-    }, [])
+    const lastMemes = props.lastMemes;
+    const setLastMemes = props.setLastMemes;
+
 
     const style = {
         GeneratedMeme_img: {

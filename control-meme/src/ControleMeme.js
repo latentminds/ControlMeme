@@ -9,6 +9,9 @@ export default function ControleMeme() {
     const [currentPage, setCurrentPage] = useState('Browse');
     const [colabSessionLink, setColabSessionLink] = useState("https://" + new URLSearchParams(window.location.search).get('gpuURL') || "https://");
 
+    const [loadedVariations, setLoadedVariations] = useState([]);
+
+
 
 
     return (
@@ -19,7 +22,7 @@ export default function ControleMeme() {
             } />
 
             <div className="content">
-                {currentPage === 'Browse' && <ControleMemeLandingPage />}
+                {currentPage === 'Browse' && <ControleMemeLandingPage lastMemes={loadedVariations} setLastMemes={setLoadedVariations} />}
                 {currentPage === 'Generate' && <ControleMemeGeneratePage colabSessionLink={colabSessionLink} setColabSessionLink={setColabSessionLink} />}
                 {currentPage === 'About' && <ControleMemeAboutPage />}
             </div>
