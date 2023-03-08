@@ -30,6 +30,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
 
     const bodyImageModale = (
         <>
+
             <img src={imageURL} alt="variation" id="variationMeme" className="modalImage" />
 
             {
@@ -39,10 +40,12 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
             }
 
             <div className='placeholder'>
-                <img src={imageURL}/>
+                <img src={imageURL} />
                 <Button variant="contained" onClick={() => setOpenDetails(true)}>Details</Button>
                 <p>Click on the image to reveal the original</p>
             </div>
+            <span className="prompt"> {imageInfo !== null && imageInfo["prompt"]} </span>
+
         </>
     );
 

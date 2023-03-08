@@ -7,9 +7,9 @@
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 
-    max-height: 80vh;
+    max-height: 75vh;
 
-    height: 80vw;
+    height: 75vw;
     width: auto;
 }
 
@@ -34,7 +34,7 @@
 
     height: 80vw;
     width: 0;
-    
+
     background-color: cadetblue;
 }
 
@@ -78,4 +78,15 @@
     overflow: 'scroll';
     max-height: '100vh';
     overflow: 'auto'
-};
+}
+
+.prompt {
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+    z-index: 20;
+    color: white;
+    font-weight: 800;
+    font-size: large;
+    text-align: center;
+}
