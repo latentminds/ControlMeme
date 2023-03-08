@@ -56,7 +56,7 @@ function ResponsiveAppBar(props) {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={new URLSearchParams(window.location.search).get('gpuURL') === null ? "/" : "https://meme.koll.ai?gpuURL=" + new URLSearchParams(window.location.search).get('gpuURL')}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
