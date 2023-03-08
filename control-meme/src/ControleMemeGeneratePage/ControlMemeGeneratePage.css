@@ -35,7 +35,8 @@
 }
 
 .generatedMeme img {
-    height: 100%;
+    height: auto;
+    max-width: 100%;
     width: 50em;
     margin: auto;
 }
