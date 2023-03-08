@@ -1,7 +1,7 @@
 import { db } from "./firebaseconfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, endBefore, getDocs, limit, orderBy, query, startAfter, startAt } from "firebase/firestore";
 
-export const fetchLastGeneratedMemesVariations = async () => {
+export const fetchAllGeneratedMemesVariations = async () => {
     //todo: replace with better query when variation are in the db with parent_url
 
     let variations = [];
@@ -77,3 +77,44 @@ export const fetchBaseMemesData = async () => {
         }
         )
 }
+
+let variationsSnapshot = null;
+
+// fetches Variations between startIndex and endIndex when ordered by timestamp desc
+export async function fetchVariationPaginated() {
+
+    if (variationsSnapshot === null) {
+        variationsSnapshot = await getDocs(
+            query(
+                collection(db, "Variations"),
+                orderBy("timestamp", "desc"),
+                limit(10)
+            ));
+    } else {
+        let lastVisible = variationsSnapshot.docs[variationsSnapshot.docs.length - 1];
+        variationsSnapshot = await getDocs(
+            query(
+                collection(db, "Variations"),
+                orderBy("timestamp", "desc"),
+                startAfter(lastVisible),
+                limit(10)
+            ));
+    }
+
+
+    const variations = [];
+    variationsSnapshot.forEach((doc) => {
+        const data = doc.data();
+        let meme = doc.data();
+        meme.uuid = doc.id;
+        variations.push(meme);
+    });
+
+
+    return variations;
+}
+
+
+
+
+
