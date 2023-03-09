@@ -7,3 +7,5 @@ google-cloud
 google-cloud-storage
 requests
 gunicorn
+opencv-python
+numpy

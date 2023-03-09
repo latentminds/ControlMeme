@@ -6,6 +6,7 @@ import requests
 import os
 import random
 from PIL import Image
+import sys
 
 cred = credentials.Certificate("./firebase_key.json")
 app = initialize_app(cred)
@@ -15,13 +16,13 @@ storage_client = storage.Client()
 bucket = storage_client.get_bucket("control-meme-public")
 
 
-image_folder = "./newmemes/"
+image_folder = sys.argv[1]
 image_folder_full = os.path.abspath(image_folder)
 
 print(image_folder_full)
 
 
-def add_variation_to_data(image_path_local, url, name):
+def add_variation_to_data(image_path_local, url_meme, name_meme):
 
     # save meme variation to bucket
 
@@ -29,11 +30,11 @@ def add_variation_to_data(image_path_local, url, name):
     bucket_save_path = "meme_variation_" + formated_timestamp + ".jpeg"
     blob = bucket.blob(bucket_save_path)
     blob.upload_from_filename(image_path_local, content_type="image/jpeg")
-    url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
+    url_meme = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
 
     variation_data = {
-        "url": url,
-        "name": name,
+        "url": url_meme,
+        "name": name_meme,
         "timestamp": firestore.SERVER_TIMESTAMP,  # type: ignore
     }
 
