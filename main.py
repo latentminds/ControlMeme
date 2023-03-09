@@ -120,7 +120,7 @@ def add_variation():
 
     path_watermarked = f"./{random_name}_watermarked.jpeg"
     variation_image = cv2.imread(path)
-    logo_image = cv2.imread("./logo.png")
+    logo_image = cv2.imread("./logo.png", cv2.IMREAD_UNCHANGED)
     watermarked = overlay_logo(variation_image, logo_image)
     cv2.imwrite(path_watermarked, watermarked)
 
