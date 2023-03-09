@@ -12,6 +12,8 @@ import time
 import random
 import os
 import base64
+from add_signature import overlay_logo
+import cv2
 
 print(os.getcwd())
 # print files in current directory
@@ -116,7 +118,13 @@ def add_variation():
     with open(path, 'wb') as f:
         f.write(base64.b64decode(fileb64))
 
-    add_variation_to_data(path, memeID,
+    path_watermarked = f"./{random_name}_watermarked.jpeg"
+    variation_image = cv2.imread(path)
+    logo_image = cv2.imread("./logo.png")
+    watermarked = overlay_logo(variation_image, logo_image)
+    cv2.imwrite(path_watermarked, watermarked)
+
+    add_variation_to_data(path_watermarked, memeID,
                           prompt=prompt,
                           controlnetPreprocess=controlnetPreprocess,
                           controlnetModel=controlnetModel,

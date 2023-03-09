@@ -54,7 +54,7 @@ def overlay_logo(variation_image, logo_image):
     variation_image_with_logo = overlay_transparent(
         variation_image, logo_image, logo_x, logo_y)
 
-    text_to_add = "Meme.Koll.ai"
+    text_to_add = "meme.koll.ai"
     text_x = logo_x + logo_image.shape[1] + 10
     text_y = logo_y + logo_image.shape[0]
 
@@ -78,7 +78,7 @@ def overlay_logo(variation_image, logo_image):
 
 
 variation_url = "https://storage.googleapis.com/control-meme-public/meme_variation_20230308-203229.jpeg"
-print(variation_image.shape)
+variation_image = imutils.url_to_image(variation_url)
 
 logo_image = cv2.imread("../images/logo.png", cv2.IMREAD_UNCHANGED)
 
