@@ -57,7 +57,7 @@ const ParamsPanel = ({
         <div className="ParamsPanel">
 
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={5} mx={1}>
+                <Grid item xs={12} sm={5} mx={1}>
 
                     <FormControl fullWidth>
                         <br />
@@ -132,7 +132,7 @@ const ParamsPanel = ({
                         * You might need to click a second time if the image is not loaded
                     </FormControl>
                 </Grid>
-                <Grid item xs={6} mx={0} >
+                <Grid item xs={12} sm={6} mx={1} >
 
                     {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
                     {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint" />}
@@ -268,14 +268,14 @@ export function ControleMemeGeneratePageStep2(props) {
             <h2>1. Select a base image</h2>
             {/* Display side by side centered*/}
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={5} mx={1} style={{ borderRadius: "10px", border: "1px solid #000" }}>
+                <Grid item xs={12} sm={5} mx={1} style={{ borderRadius: "10px", border: "1px solid #000" }}>
                     <div className="MemeSelector">
                         <span>
                             {items}
                         </span>
                     </div>
                 </Grid>
-                <Grid item xs={6} mx={0} >
+                <Grid item xs={12} sm={6} mx={1} >
                     {params.selectedMeme.url !== DEFAULT_IMAGE_URL &&
                         <img style={{ width: "auto", height: "33.5em", maxHeight: "33.5em", borderRadius: "10px", border: "1px solid #000" }}
                             src={params.selectedMeme.url} alt="controlnet hint" className="" />}
@@ -298,7 +298,7 @@ export function ControleMemeGeneratePageStep2(props) {
             </div>
 
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={5} mx={1}>
+                <Grid item xs={12} sm={5} mx={1}>
 
 
                     <h2> 3. Generate Meme !</h2>
@@ -402,9 +402,7 @@ export function ControleMemeGeneratePageStep2(props) {
                     </FormControl>
 
                 </Grid>
-                <Grid item xs={6} mx={0}>
-
-                    <h2> 4. See AI Variation </h2>
+                <Grid item xs={12} sm={6} mx={1}>
 
                     <div className="generatedMeme" >
                         {generatedImageb64 !== "" && <img className="ControlnetHint" src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image with controlnet" className="GeneratedMeme" />}
