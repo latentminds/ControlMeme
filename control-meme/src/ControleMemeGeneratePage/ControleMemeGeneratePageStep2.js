@@ -1,6 +1,11 @@
-import { Button, Checkbox, FormControl, FormControlLabel, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
+import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
 import { useState } from "react";
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./ControlMemeGeneratePage.css"
 
 const ParamsPanel = ({
@@ -55,7 +60,7 @@ const ParamsPanel = ({
                     <FormControl fullWidth>
                         <br />
                         {/* Select one of canny, hed, mlsd, depth, depths_leres, normal_map, openpose, openpose_hand, fake_skribble, segmentation, pidinet */}
-                        <label id="label-select-preprocess">Controlnet Preprocess</label>
+                        <Typography gutterBottom textAlign={"left"} id="label-select-preprocess">Controlnet Preprocess</Typography>
                         <Select
                             labelId="label-select-preprocess"
                             id="demo-simple-select"
@@ -80,18 +85,8 @@ const ParamsPanel = ({
 
 
                         <br />
-                        <label id="label-select-res">Preprocess Resolution</label>
-                        <Slider
-                            defaultValue={params.controlnetRes}
-                            aria-labelledby="continuous-slider-res"
-                            valueLabelDisplay="auto"
-                            step={64}
-                            min={64}
-                            max={512}
-                            onChangeCommitted={(e, value) => setParams({ ...params, controlnetRes: value })}
-                        />
-                        <br />
-                        <label id="label-select-threshold-a">Preprocess Threshold A</label>
+
+                        <Typography gutterBottom textAlign={"left"} id="label-select-threshold-a">Preprocess Threshold A:</Typography>
                         <Slider
                             defaultValue={params.controlnetThresholdA}
                             aria-labelledby="continuous-slider-A"
@@ -102,7 +97,7 @@ const ParamsPanel = ({
                             onChangeCommitted={(e, value) => setParams({ ...params, controlnetThresholdA: value })}
                         />
                         <br />
-                        <label id="label-select-threshold-b">Preprocess Threshold B</label>
+                        <Typography gutterBottom textAlign={"left"} id="label-select-threshold-b">Preprocess Threshold B:</Typography>
                         <Slider
                             defaultValue={params.controlnetThresholdB}
                             aria-labelledby="continuous-slider-B"
@@ -113,6 +108,17 @@ const ParamsPanel = ({
                             onChangeCommitted={(e, value) => setParams({ ...params, controlnetThresholdB: value })}
                         />
 
+                        <br />
+                        <Typography gutterBottom textAlign={"left"} id="label-select-res">Preprocess Resolution:</Typography>
+                        <Slider
+                            defaultValue={params.controlnetRes}
+                            aria-labelledby="continuous-slider-res"
+                            valueLabelDisplay="auto"
+                            step={64}
+                            min={64}
+                            max={512}
+                            onChangeCommitted={(e, value) => setParams({ ...params, controlnetRes: value })}
+                        />
                         <br />
                         <Button variant="contained" color="primary" onClick={handleClickHintPreview}
                             disabled={(params.selectedMeme === null || params.controlnetPreprocess === "none") || previewButtonDisabled === true}
@@ -148,6 +154,14 @@ export function ControleMemeGeneratePageStep2(props) {
         'controlnetThresholdB': 100,
         'controlnetRes': 128,
         'selectedMeme': { 'url': DEFAULT_IMAGE_URL },
+        'negative_prompt': 'bad',
+        'seed': -1,
+        'subseed': -1,
+        'subseedStrength': 0,
+        'cfgScale': 7,
+        'restoreFaces': true,
+        'eta': 0,
+        'samplerIndex': 'Euler a'
     });
 
     const [controlnetHintb64, setControlnetHintb64] = useState("");
@@ -254,7 +268,7 @@ export function ControleMemeGeneratePageStep2(props) {
             </div>
 
             <Grid container spacing={3}>
-                <Grid item xs={6} mx={1} >
+                <Grid item xs={5} mx={1} >
 
 
                     <h2> 3. Generate Meme !</h2>
@@ -283,7 +297,8 @@ export function ControleMemeGeneratePageStep2(props) {
                     'controlnet_preprocessor_res': kwargs.get('controlnet_preprocessor_res', 64),
         } */}
 
-                    {/* Params list:
+                    {/*
+                     Params list:
                         - prompt : str: text field
                         - numInferencesSteps : int: integer field
                         - controlnetModel : str: select field
@@ -303,7 +318,18 @@ export function ControleMemeGeneratePageStep2(props) {
                         <br />
                         <TextField label="Num Inferences Steps" type="number" variant="outlined" value={params.numInferencesSteps} onChange={(e) => setParams({ ...params, numInferencesSteps: e.target.value })} />
                         <br />
-                        <label id="label-select-model">Controlnet Model</label>
+                        <Typography gutterBottom id="label-select-sampler" textAlign={"left"}>Sampler Index:</Typography>
+                        <Select
+                            labelId="label-select-sampler"
+                            id="demo-simple-select"
+                            value={params.samplerIndex}
+                            onChange={(e) => setParams({ ...params, samplerIndex: e.target.value })}
+                            defaultValue={"Euler a"}
+                        >
+                            <MenuItem value={"Euler a"}>Euler a</MenuItem>
+                        </Select>
+                        <br />
+                        <Typography gutterBottom id="label-select-model" textAlign={"left"}>Controlnet Model:</Typography>
                         <Select
                             labelId="label-select-model"
                             id="demo-simple-select"
@@ -322,51 +348,57 @@ export function ControleMemeGeneratePageStep2(props) {
                         </Select>
 
                         <br />
-                        <label id="label-select-sampler">Sampler Index</label>
-                        <Select
-                            labelId="label-select-sampler"
-                            id="demo-simple-select"
-                            value={params.samplerIndex}
-                            onChange={(e) => setParams({ ...params, samplerIndex: e.target.value })}
-                            defaultValue={"Euler a"}
-                        >
-                            <MenuItem value={"Euler a"}>Euler a</MenuItem>
-                        </Select>
-                        <br />
-                        <TextField label="Negative Prompt" variant="outlined" value={params.negativePrompt} onChange={(e) => setParams({ ...params, negativePrompt: e.target.value })} />
-                        <br />
-                        <TextField label="Seed" type="number" variant="outlined" value={params.seed} onChange={(e) => setParams({ ...params, seed: e.target.value })} />
-                        <br />
-                        <TextField label="Subseed" type="number" variant="outlined" value={params.subseed} onChange={(e) => setParams({ ...params, subseed: e.target.value })} />
-                        <br />
-                        <TextField label="Subseed Strength" type="number" variant="outlined" value={params.subseedStrength} onChange={(e) => setParams({ ...params, subseedStrength: e.target.value })} />
-                        <br />
-                        <Slider
-                            defaultValue={params.cfgScale}
-                            aria-labelledby="discrete-slider"
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks
-                            min={1}
-                            max={14}
-                            onChange={(e, value) => setParams({ ...params, cfgScale: value })}
-                        />
-                        <br />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={params.restoreFaces}
-                                    onChange={(e) => setParams({ ...params, restoreFaces: e.target.checked })}
-                                    name="restoreFaces"
-                                    color="primary"
-                                />
-                            }
-                            label="Restore Faces"
-                        />
-                        <br />
-                        <TextField label="Eta" type="number" variant="outlined" value={params.eta} onChange={(e) => setParams({ ...params, eta: e.target.value })} />
-                        <br />
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Advanced Params</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <FormGroup fullWidth>
+                                    <TextField label="Negative Prompt" variant="outlined" value={params.negativePrompt} onChange={(e) => setParams({ ...params, negativePrompt: e.target.value })} />
+                                    <br />
+                                    <TextField label="Seed" type="number" variant="outlined" value={params.seed} onChange={(e) => setParams({ ...params, seed: e.target.value })} />
+                                    <br />
+                                    <TextField label="Subseed" type="number" variant="outlined" value={params.subseed} onChange={(e) => setParams({ ...params, subseed: e.target.value })} />
+                                    <br />
+                                    <TextField label="Subseed Strength" type="number" variant="outlined" value={params.subseedStrength} onChange={(e) => setParams({ ...params, subseedStrength: e.target.value })} />
+                                    <br />
+                                    <Typography id="discrete-slider" textAlign={"left"}>
+                                        Cfg Scale
+                                    </Typography>
 
+                                    <Slider
+                                        defaultValue={params.cfgScale}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="auto"
+                                        step={1}
+                                        marks
+                                        min={1}
+                                        max={14}
+                                        onChange={(e, value) => setParams({ ...params, cfgScale: value })}
+                                    />
+                                    <br />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={params.restoreFaces}
+                                                onChange={(e) => setParams({ ...params, restoreFaces: e.target.checked })}
+                                                name="restoreFaces"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Restore Faces"
+                                    />
+                                    <br />
+                                    <TextField label="Eta" type="number" variant="outlined" value={params.eta} onChange={(e) => setParams({ ...params, eta: e.target.value })} />
+                                    <br />
+                                </FormGroup>
+                            </AccordionDetails>
+                        </Accordion>
+                        <br />
 
                         <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
                             disabled={generateButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
