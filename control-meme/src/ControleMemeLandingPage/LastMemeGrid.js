@@ -87,7 +87,7 @@ export default function LastMemeGrid(props) {
                     {lastMemes.map((meme, index) => {
                         return <div className style={style.GeneratedMeme}>
                             <img src={meme.url} alt="meme" key={index}
-                                onClick={() => props.onClickImage(meme, meme.url, meme.parent_url)}
+                                onClick={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
                                 style={style.GeneratedMeme_img}
                             />
                         </div>
