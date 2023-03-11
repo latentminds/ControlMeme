@@ -320,7 +320,7 @@ export function ControleMemeGeneratePageStep2(props) {
                             <MenuItem value={"Euler a"}>Euler a</MenuItem>
                         </Select>
                         <br />
-                        <Typography gutterBottom id="label-select-model" textAlign={"left"}>Controlnet Model:</Typography>
+                        <Typography gutterBottom id="label-select-model" textAlign={"left"}>Controlnet Model <strong>(You need to choose according to the preprocess)</strong>: </Typography>
                         <Select
                             labelId="label-select-model"
                             id="demo-simple-select"
