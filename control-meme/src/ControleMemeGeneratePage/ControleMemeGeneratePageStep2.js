@@ -1,5 +1,5 @@
 import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -9,6 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./ControlMemeGeneratePage.css"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { analytics } from "../firebase/firebaseconfig";
+import { logEvent } from "firebase/analytics";
 
 
 const notify_error = (message) => toast.error(message, {
