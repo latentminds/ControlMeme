@@ -10,6 +10,7 @@ import "./ControlMemeGeneratePage.css"
 
 const ParamsPanel = ({
     params, setParams,
+    colabSessionLink,
     controlnetHintb64, setControlnetHintb64
 }) => {
 
@@ -30,7 +31,7 @@ const ParamsPanel = ({
         console.log(args)
 
         // call api POST at /hint/ and get base64 image response
-        fetch(params.colabSessionLink + '/hint/', {
+        fetch(colabSessionLink + '/hint/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,10 +76,10 @@ const ParamsPanel = ({
                             <MenuItem value={"depths_leres"}>Depth LERES</MenuItem>
                             <MenuItem value={"normal_map"}>Normal Map</MenuItem>
                             <MenuItem value={"openpose"}>OpenPose</MenuItem>
-                            <MenuItem value={"openpose_hand"}>OpenPose Hand</MenuItem>
-                            <MenuItem value={"fake_skribble"}>Fake Skribble</MenuItem>
+                            <MenuItem value={"fake_scribble"}>Fake Skribble</MenuItem>
                             <MenuItem value={"segmentation"}>Segmentation</MenuItem>
-                            <MenuItem value={"pidinet"}>PIDINet</MenuItem>
+                            <MenuItem value={"binary"}>Binary</MenuItem>
+                            <MenuItem value={"color"}>Color</MenuItem>
                         </Select>
 
                         <br />
@@ -125,6 +126,8 @@ const ParamsPanel = ({
                         >
                             Generate Hint Preview
                         </Button>
+                        <br />
+                        * You might need to click a second time if the image is not loaded
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} sx={{ m: 1 }}>
@@ -149,7 +152,7 @@ export function ControleMemeGeneratePageStep2(props) {
         'prompt': 'Cute cat digital painting, masterpiece',
         'numInferencesSteps': 10,
         'controlnetPreprocess': 'canny',
-        'controlnetModel': 'control_canny [e3fe7712]',
+        'controlnetModel': 'control_canny-fp16 [e3fe7712]',
         'controlnetThresholdA': 30,
         'controlnetThresholdB': 100,
         'controlnetRes': 128,
@@ -182,12 +185,23 @@ export function ControleMemeGeneratePageStep2(props) {
 
         const args = {
             "uuid": selectedMemeUUID,
-            "prompt": prompt,
-            "nb_steps": parseInt(params.numInferencesSteps),
             "controlnet_basememe_url": params.selectedMeme.url,
             "controlnet_module": params.controlnetPreprocess,
             "controlnet_threshold_a": params.controlnetThresholdA,
-            "controlnet_threshold_b": params.controlnetThresholdB
+            "controlnet_threshold_b": params.controlnetThresholdB,
+            'controlnet_preprocessor_res': params.controlnetRes,
+            "controlnet_model": params.controlnetModel,
+
+            "prompt": params.prompt,
+            "steps": parseInt(params.numInferencesSteps),
+            "negative_prompt": params.negative_prompt,
+            "seed": parseInt(params.seed),
+            "subseed": parseInt(params.subseed),
+            "subseed_strength": parseInt(params.subseedStrength),
+            "cfg_scale": parseInt(params.cfgScale),
+            "restore_faces": params.restoreFaces,
+            "eta": parseInt(params.eta),
+            "sampler_index": params.samplerIndex
         }
 
         // call api and get base64 image response
@@ -262,6 +276,7 @@ export function ControleMemeGeneratePageStep2(props) {
             <div className="ParamsPanel">
                 <ParamsPanel
                     params={params} setParams={setParams}
+                    colabSessionLink={props.colabSessionLink}
                     controlnetHintb64={controlnetHintb64} setControlnetHintb64={setControlnetHintb64}
                 />
 
@@ -318,7 +333,7 @@ export function ControleMemeGeneratePageStep2(props) {
                         <br />
                         <TextField label="Num Inferences Steps" type="number" variant="outlined" value={params.numInferencesSteps} onChange={(e) => setParams({ ...params, numInferencesSteps: e.target.value })} />
                         <br />
-                        <Typography gutterBottom id="label-select-sampler" textAlign={"left"}>Sampler Index:</Typography>
+                        <Typography gutterBottom id="label-select-sampler" textAlign={"left"}>Sampler:</Typography>
                         <Select
                             labelId="label-select-sampler"
                             id="demo-simple-select"
@@ -335,16 +350,18 @@ export function ControleMemeGeneratePageStep2(props) {
                             id="demo-simple-select"
                             value={params.controlnetModel}
                             onChange={(e) => setParams({ ...params, controlnetModel: e.target.value })}
-                            defaultValue={"control_canny [e3fe7712]"}
+                            defaultValue={"control_canny-fp16 [e3fe7712]"}
                         >
-                            <MenuItem value={"control_canny [e3fe7712]"}>control_canny [e3fe7712]</MenuItem>
-                            <MenuItem value={"control_depth [400750f6]"}>control_depth [400750f6]</MenuItem>
+                            <MenuItem value={"control_canny-fp16 [e3fe7712]"}>control_canny-fp16 [e3fe7712]</MenuItem>
+                            <MenuItem value={"control_depth-fp16 [400750f6]"}>control_depth-fp16 [400750f6]</MenuItem>
                             <MenuItem value={"control_hed-fp16 [13fee50b]"}>control_hed-fp16 [13fee50b]</MenuItem>
                             <MenuItem value={"control_mlsd-fp16 [e3705cfa]"}>control_mlsd-fp16 [e3705cfa]</MenuItem>
                             <MenuItem value={"control_normal-fp16 [63f96f7c]"}>control_normal-fp16 [63f96f7c]</MenuItem>
                             <MenuItem value={"control_openpose-fp16 [9ca67cc5]"}>control_openpose-fp16 [9ca67cc5]</MenuItem>
                             <MenuItem value={"control_scribble-fp16 [c508311e]"}>control_scribble-fp16 [c508311e]</MenuItem>
                             <MenuItem value={"control_seg-fp16 [b9c1cc12]"}>control_seg-fp16 [b9c1cc12]</MenuItem>
+
+
                         </Select>
 
                         <br />
@@ -403,6 +420,9 @@ export function ControleMemeGeneratePageStep2(props) {
                         <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
                             disabled={generateButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
                             Generate</Button>
+                        <br />
+                        * You might need to click a second time if the image is not loaded
+
                     </FormControl>
 
                 </Grid>
