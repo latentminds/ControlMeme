@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
+import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, MenuItem, Select, Slider, TextField } from "@mui/material";
 import { useState } from "react";
 
 import Accordion from '@mui/material/Accordion';
@@ -7,12 +7,37 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./ControlMemeGeneratePage.css"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+const notify_error = (message) => toast.error(message, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+});
+const notify_success = (message) => toast.success(message, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+});
 
 const ParamsPanel = ({
     params, setParams,
     colabSessionLink,
     controlnetHintb64, setControlnetHintb64
 }) => {
+
+
+
 
     const [previewButtonDisabled, setPreviewButtonDisabled] = useState(false);
 
@@ -49,6 +74,7 @@ const ParamsPanel = ({
             .catch((error) => {
                 console.error('Error:', error);
                 setPreviewButtonDisabled(false);
+                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
             }
             );
     }
@@ -123,11 +149,15 @@ const ParamsPanel = ({
                             onChangeCommitted={(e, value) => setParams({ ...params, controlnetRes: value })}
                         />
                         <br />
-                        <Button variant="contained" color="primary" onClick={handleClickHintPreview}
-                            disabled={(params.selectedMeme === null || params.controlnetPreprocess === "none") || previewButtonDisabled === true}
-                        >
-                            Generate Hint Preview
-                        </Button>
+                        {previewButtonDisabled === true && <CircularProgress style={{ margin: "auto" }} />}
+                        {previewButtonDisabled === false &&
+
+                            <Button variant="contained" color="primary" onClick={handleClickHintPreview}
+                                disabled={(params.selectedMeme === null || params.controlnetPreprocess === "none") || previewButtonDisabled === true}
+                            >
+                                Generate Hint Preview
+                            </Button>
+                        }
                         <br />
                         * You might need to click a second time if the image is not loaded
                     </FormControl>
@@ -221,10 +251,12 @@ export function ControleMemeGeneratePageStep2(props) {
                 setGeneratedImageb64(data)
                 setGenerateButtonDisabled(false)
                 setAddtopublicButtonDisabled(false)
+                notify_success("Variation generated!")
             }
             )
             .catch((error) => {
                 console.error('Error:', error);
+                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
                 setGenerateButtonDisabled(false)
             }
             );
@@ -243,10 +275,12 @@ export function ControleMemeGeneratePageStep2(props) {
             .then(response => response.text())
             .then(data => {
                 console.log('Success:', data);
+                notify_success("Variation added to public gallery")
             }
             )
             .catch((error) => {
                 console.error('Error:', error);
+                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
             }
             );
     }
@@ -264,7 +298,7 @@ export function ControleMemeGeneratePageStep2(props) {
 
     return (
         <div className="ControleMemeGeneratePageStep2">
-
+            <ToastContainer />
             <h2>1. Select a base image</h2>
             {/* Display side by side centered*/}
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
@@ -392,10 +426,14 @@ export function ControleMemeGeneratePageStep2(props) {
                             </AccordionDetails>
                         </Accordion>
                         <br />
-
-                        <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
-                            disabled={generateButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
-                            Generate</Button>
+                        {/* align center */}
+                        {generateButtonDisabled === true && <CircularProgress style={{ margin: "auto" }} />}
+                        {generateButtonDisabled === false &&
+                            <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
+                                disabled={generateButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
+                                Generate
+                            </Button>
+                        }
                         <br />
                         * You might need to click a second time if the image is not loaded
 
