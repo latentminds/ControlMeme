@@ -1,5 +1,4 @@
 import cv2
-import imutils
 import cv2
 import numpy as np
 
@@ -45,7 +44,7 @@ def overlay_transparent(background, overlay, x, y):
 
 def overlay_logo(variation_image, logo_image):
 
-    logo_image = cv2.resize(logo_image, (0, 0), fx=0.1, fy=0.1)
+    logo_image = cv2.resize(logo_image, (0, 0), fx=0.08, fy=0.08)
 
     # compute x y coordinates of the logo on the variation image so that it is on the bottom left corner
     logo_x = 10
@@ -63,26 +62,29 @@ def overlay_logo(variation_image, logo_image):
                                                      text=text_to_add, org=(
                                                          text_x, text_y - 10),
                                                      fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                                     fontScale=1, color=colors["black"],
-                                                     thickness=4,
+                                                     fontScale=0.7, color=colors["black"],
+                                                     thickness=2,
                                                      lineType=cv2.LINE_AA)
     variation_image_with_logo_and_text = cv2.putText(img=variation_image_with_logo_and_text,
                                                      text=text_to_add, org=(
                                                          text_x, text_y - 10),
                                                      fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                                     fontScale=1, color=colors["white"],
-                                                     thickness=2,
+                                                     fontScale=0.7, color=colors["white"],
+                                                     thickness=1,
                                                      lineType=cv2.LINE_AA)
 
     return variation_image_with_logo_and_text
 
 
-# variation_url = "https://storage.googleapis.com/control-meme-public/meme_variation_20230308-203229.jpeg"
-# variation_image = imutils.url_to_image(variation_url)
+if __name__ == "__main__":
+    import imutils
+    variation_url = "https://storage.googleapis.com/control-meme-public/meme_variation_20230308-203229.jpeg"
+    variation_image = imutils.url_to_image(variation_url)
 
-# logo_image = cv2.imread("../images/logo.png", cv2.IMREAD_UNCHANGED)
+    logo_image = cv2.imread("./logo.png", cv2.IMREAD_UNCHANGED)
 
-# variation_image_with_logo_and_text = overlay_logo(variation_image, logo_image)
+    variation_image_with_logo_and_text = overlay_logo(
+        variation_image, logo_image)
 
-# cv2.imwrite("../images/meme_variation_20230308-203229_with_signature.jpeg",
-#             variation_image_with_logo_and_text)
+    cv2.imwrite("./images/meme_variation_20230308-203229_with_signature.jpeg",
+                variation_image_with_logo_and_text)

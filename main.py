@@ -36,19 +36,27 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
+def add_variation_to_data(image_path_local, hint_path_local, parent_uuid, **kwargs):
 
     # get kwargs
-    prompt = kwargs.get("prompt")
-    controlnetPreprocess = kwargs.get("controlnetPreprocess")
-    controlnetModel = kwargs.get("controlnetModel")
-    baseModel = kwargs.get("baseModel")
-    nb_steps = kwargs.get("nb_steps")
-    sampler = kwargs.get("sampler")
-    seed = kwargs.get("seed")
-    guidance_strenght_prompt = kwargs.get("guidance_strenght_prompt")
-    guidance_strenght_image = kwargs.get("guidance_strenght_image")
     parent_url = kwargs.get("parent_url")
+
+    controlnet_module = kwargs.get("controlnet_module")
+    controlnet_model = kwargs.get("controlnet_model")
+    prompt = kwargs.get("prompt")
+    negative_prompt = kwargs.get("negative_prompt")
+    seed = kwargs.get("seed")
+    subseed = kwargs.get("subseed")
+    subseed_strength = kwargs.get("subseed_strength")
+    steps = kwargs.get("steps")
+    cfg_scale = kwargs.get("cfg_scale")
+    restore_faces = kwargs.get("restore_faces")
+    eta = kwargs.get("eta")
+    sampler_index = kwargs.get("sampler_index")
+    controlnet_guidance = kwargs.get("controlnet_guidance")
+    controlnet_threshold_a = kwargs.get("controlnet_threshold_a")
+    controlnet_threshold_b = kwargs.get("controlnet_threshold_b")
+    controlnet_preprocessor_res = kwargs.get("controlnet_preprocessor_res")
 
     # save meme variation to bucket
 
@@ -56,22 +64,35 @@ def add_variation_to_data(image_path_local, parent_uuid, **kwargs):
     bucket_save_path = "meme_variation_" + formated_timestamp + ".jpeg"
     blob = bucket.blob(bucket_save_path)
     blob.upload_from_filename(image_path_local, content_type="image/jpeg")
-    url = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
+    url_variation = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
+
+    bucket_save_path = "meme_variation_" + formated_timestamp + "_hint.jpeg"
+    blob = bucket.blob(bucket_save_path)
+    blob.upload_from_filename(hint_path_local, content_type="image/jpeg")
+    url_hint = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
 
     variation_data = {
-        "url": url,
-        "prompt": prompt,
-        "controlnetPreprocess": controlnetPreprocess,
-        "controlnetModel": controlnetModel,
-        "baseModel": baseModel,
-        "nb_steps": nb_steps,
-        "sampler": sampler,
-        "seed": seed,
-        "guidance_strenght_prompt": guidance_strenght_prompt,
-        "guidance_strenght_image": guidance_strenght_image,
+        "url": url_variation,
+        "url_hint": url_hint,
         "timestamp": firestore.SERVER_TIMESTAMP,  # type: ignore
         "parent_uuid": parent_uuid,
-        "parent_url": parent_url
+        "parent_url": parent_url,
+        "controlnet_module": controlnet_module,
+        "controlnet_model": controlnet_model,
+        "prompt": prompt,
+        "negative_prompt": negative_prompt,
+        "seed": seed,
+        "subseed": subseed,
+        "subseed_strength": subseed_strength,
+        "steps": steps,
+        "cfg_scale": cfg_scale,
+        "restore_faces": restore_faces,
+        "eta": eta,
+        "sampler_index": sampler_index,
+        "controlnet_guidance": controlnet_guidance,
+        "controlnet_threshold_a": controlnet_threshold_a,
+        "controlnet_threshold_b": controlnet_threshold_b,
+        "controlnet_preprocessor_res": controlnet_preprocessor_res
     }
 
     db = firestore.client()
@@ -99,6 +120,7 @@ def add_variation():
     print('oups')
     memeID = args.get("memeID")
     fileb64 = args.get("imageb64")
+    hintb64 = args.get("hintb64")
     prompt = args.get("prompt")
     controlnetPreprocess = args.get("controlnetPreprocess")
     controlnetModel = args.get("controlnetModel")
@@ -108,7 +130,7 @@ def add_variation():
     seed = args.get("seed")
     guidance_strenght_prompt = args.get("guidance_strenght_prompt")
     guidance_strenght_image = args.get("guidance_strenght_image")
-    parent_url = args.get("parent_url")
+    parent_url = args.get("controlnet_basememe_url")
 
     print('here')
     # Todo add image fast validation
@@ -117,6 +139,9 @@ def add_variation():
     path = f"./{random_name}.jpeg"
     with open(path, 'wb') as f:
         f.write(base64.b64decode(fileb64))
+    path_hint = f"./{random_name}_hint.jpeg"
+    with open(path_hint, 'wb') as f:
+        f.write(base64.b64decode(hintb64))
 
     path_watermarked = f"./{random_name}_watermarked.jpeg"
     variation_image = cv2.imread(path)
@@ -124,7 +149,8 @@ def add_variation():
     watermarked = overlay_logo(variation_image, logo_image)
     cv2.imwrite(path_watermarked, watermarked)
 
-    add_variation_to_data(path_watermarked, memeID,
+    add_variation_to_data(path_watermarked, path_hint,
+                          memeID,
                           prompt=prompt,
                           controlnetPreprocess=controlnetPreprocess,
                           controlnetModel=controlnetModel,
