@@ -55,8 +55,9 @@ const ParamsPanel = ({
 
     return (
         <div className="ParamsPanel">
-            <Grid container spacing={1}>
-                <Grid item xs={5} sx={{ m: 1 }}>
+
+            <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
+                <Grid item xs={5} mx={1}>
 
                     <FormControl fullWidth>
                         <br />
@@ -80,6 +81,7 @@ const ParamsPanel = ({
                             <MenuItem value={"segmentation"}>Segmentation</MenuItem>
                             <MenuItem value={"binary"}>Binary</MenuItem>
                             <MenuItem value={"color"}>Color</MenuItem>
+                            <MenuItem value={"none"}>None</MenuItem>
                         </Select>
 
                         <br />
@@ -130,7 +132,7 @@ const ParamsPanel = ({
                         * You might need to click a second time if the image is not loaded
                     </FormControl>
                 </Grid>
-                <Grid item xs={6} sx={{ m: 1 }}>
+                <Grid item xs={6} mx={0} >
 
                     {controlnetHintb64 !== "" && <img src={"data:image/jpeg;base64, " + controlnetHintb64} alt="controlnet hint" className="ControlnetHint" />}
                     {controlnetHintb64 === "" && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="ControlnetHint" />}
@@ -264,12 +266,25 @@ export function ControleMemeGeneratePageStep2(props) {
         <div className="ControleMemeGeneratePageStep2">
 
             <h2>1. Select a base image</h2>
+            {/* Display side by side centered*/}
+            <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
+                <Grid item xs={5} mx={1} style={{ borderRadius: "10px", border: "1px solid #000" }}>
+                    <div className="MemeSelector">
+                        <span>
+                            {items}
+                        </span>
+                    </div>
+                </Grid>
+                <Grid item xs={6} mx={0} >
+                    {params.selectedMeme.url !== DEFAULT_IMAGE_URL &&
+                        <img style={{ width: "auto", height: "33.5em", maxHeight: "33.5em", borderRadius: "10px", border: "1px solid #000" }}
+                            src={params.selectedMeme.url} alt="controlnet hint" className="" />}
+                    {params.selectedMeme.url === DEFAULT_IMAGE_URL && <img src={DEFAULT_IMAGE_URL} alt="controlnet hint" className="" />}
 
-            <div className="MemeSelector">
-                <span>
-                    {items}
-                </span>
-            </div>
+                </Grid>
+            </Grid>
+
+
 
             <h2> 2. Select & Preview Preprocess</h2>
             {/* Display side by side */}
@@ -282,51 +297,12 @@ export function ControleMemeGeneratePageStep2(props) {
 
             </div>
 
-            <Grid container spacing={3}>
-                <Grid item xs={5} mx={1} >
+            <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
+                <Grid item xs={5} mx={1}>
 
 
                     <h2> 3. Generate Meme !</h2>
 
-                    {/* body = {
-                        "prompt": kwargs.get("prompt", ""),
-                    "negative_prompt": kwargs.get("negative_prompt", ""),
-                    "seed": kwargs.get("seed", -1),
-                    "subseed": kwargs.get("subseed", -1),
-                    "subseed_strength": kwargs.get("subseed_strength", 0),
-                    "batch_size": kwargs.get("batch_size", 1),
-                    "n_iter": kwargs.get("n_iter", 1),
-                    "steps": kwargs.get("steps", 30),
-                    "cfg_scale": kwargs.get("cfg_scale", 7),
-                    "width": width,
-                    "height": height,
-                    "restore_faces": kwargs.get("restore_faces", True),
-                    "eta": kwargs.get("eta", 0),
-                    "sampler_index": kwargs.get("sampler_index", "Euler a"),
-                    "controlnet_input_image": [input_image_b64],
-                    "controlnet_module": module,
-                    "controlnet_model": model,
-                    "controlnet_guidance": kwargs.get("controlnet_guidance", 1.0),
-                    'conytolnet_threshold_a': kwargs.get('controlnet_threshold_a', 100),
-                    'controlnet_threshold_b': kwargs.get('controlnet_threshold_b', 100),
-                    'controlnet_preprocessor_res': kwargs.get('controlnet_preprocessor_res', 64),
-        } */}
-
-                    {/*
-                     Params list:
-                        - prompt : str: text field
-                        - numInferencesSteps : int: integer field
-                        - controlnetModel : str: select field
-                        - samplerIndex : str: select field
-                        - negativePrompt : str: text field
-                        - seed : int: text field
-                        - subseed : int: text field
-                        - subseedStrength : int: text field
-                        - cfgScale : int: slider from 1 to 14 (default 7)
-                        - restoreFaces : bool: checkbox
-                        - eta : int: text field
-
-                    */}
 
                     <FormControl fullWidth>
                         <TextField label="Prompt" variant="outlined" value={params.prompt} onChange={(e) => setParams({ ...params, prompt: e.target.value })} />
@@ -426,7 +402,7 @@ export function ControleMemeGeneratePageStep2(props) {
                     </FormControl>
 
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} mx={0}>
 
                     <h2> 4. See AI Variation </h2>
 
