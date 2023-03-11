@@ -159,7 +159,7 @@ export function ControleMemeGeneratePageStep2(props) {
         'controlnetThresholdB': 100,
         'controlnetRes': 128,
         'selectedMeme': { 'url': DEFAULT_IMAGE_URL },
-        'negative_prompt': 'bad',
+        'negativePrompt': 'bad',
         'seed': -1,
         'subseed': -1,
         'subseedStrength': 0,
@@ -196,7 +196,7 @@ export function ControleMemeGeneratePageStep2(props) {
 
             "prompt": params.prompt,
             "steps": parseInt(params.numInferencesSteps),
-            "negative_prompt": params.negative_prompt,
+            "negative_prompt": params.negativePrompt,
             "seed": parseInt(params.seed),
             "subseed": parseInt(params.subseed),
             "subseed_strength": parseInt(params.subseedStrength),
