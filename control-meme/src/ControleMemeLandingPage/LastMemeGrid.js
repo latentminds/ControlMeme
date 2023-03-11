@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField'
 import Search from '@mui/icons-material/Search'
 import InputAdornment from '@mui/material/InputAdornment';
 import InfiniteScroll from 'react-infinite-scroller';
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase/firebaseconfig";
 
 
 import { useEffect, useState } from "react";
@@ -74,6 +76,12 @@ export default function LastMemeGrid(props) {
                 loadMore={() => {
                     fetchVariationPaginated().then((lastMemes => {
                         setLastMemes((prevState) => [...prevState, ...lastMemes]);
+                        logEvent(analytics, 'page_view', {
+                            page_title: 'Landing Page Load More',
+                            page_location: window.location.href,
+                            page_path: window.location.pathname
+                        });
+
                     }
                     ))
                 }}

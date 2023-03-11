@@ -193,7 +193,7 @@ export function ControleMemeGeneratePageStep2(props) {
         'seed': -1,
         'subseed': -1,
         'subseedStrength': 0,
-        'cfgScale': 7,
+        'cfgScale': 5,
         'restoreFaces': true,
         'eta': 0,
         'samplerIndex': 'Euler a'
@@ -207,6 +207,13 @@ export function ControleMemeGeneratePageStep2(props) {
 
     //control_canny [e3fe7712]
 
+    useEffect(() => {
+        logEvent(analytics, 'page_view', {
+            page_title: 'ControleMemeGeneratePageStep2',
+            page_location: window.location.href,
+            page_path: window.location.pathname
+        });
+    }, [])
 
     // send file to api
     const handleClickGenerate = () => {

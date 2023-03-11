@@ -1,5 +1,18 @@
+import { logEvent } from "firebase/analytics";
+import { useEffect } from "react";
+import { analytics } from "../firebase/firebaseconfig";
 
 export const ControleMemeAboutPage = () => {
+
+    useEffect(() => {
+        logEvent(analytics, 'page_view', {
+            page_title: 'About Page',
+            page_location: window.location.href,
+            page_path: window.location.pathname
+        });
+    }, [])
+
+
     return (
         <div>
             <h1>About</h1>

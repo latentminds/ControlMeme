@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageInfoModal from "./ImageInfoModal"
 import LastMemeGrid from "./LastMemeGrid"
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase/firebaseconfig"
 
 export default function ControleMemeLandingPage(props) {
 
@@ -11,9 +13,22 @@ export default function ControleMemeLandingPage(props) {
     const [showModalImageInfo, setShowModalImageInfo] = useState(false);
     const [clickedImageInfo, setClickedImageInfo] = useState(null); // dict or args
 
+    useEffect(() => {
+        logEvent(analytics, 'page_view', {
+            page_title: 'Landing Page',
+            page_location: window.location.href,
+            page_path: window.location.pathname
+        });
+    }, [])
+
 
     // on click on a meme, open the modal
     const handleOpenModalImageInfo = (imageInfo, imageURL, parentURL, hintURL) => {
+        logEvent(analytics, 'select_content', {
+            page_title: 'Landing Page',
+            url: imageURL
+        });
+
         console.log(parentURL)
         console.log(imageInfo);
         setClickedImageInfo(imageInfo);

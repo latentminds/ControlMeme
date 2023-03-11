@@ -6,7 +6,8 @@ import { fetchBaseMemesData, fetchBaseMemesUrls } from "../firebase/firestoreCal
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { UploadImage } from "./UploadImage";
-
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase/firebaseconfig";
 
 import { ControleMemeGeneratePageStep2 } from "./ControleMemeGeneratePageStep2";
 
@@ -23,6 +24,7 @@ export default function ControleMemeGeneratePage({ colabSessionLink, setColabSes
             setBaseMemes(baseMemes)
             console.log(baseMemes)
         })
+
     }, [])
 
     return (
@@ -46,6 +48,16 @@ export default function ControleMemeGeneratePage({ colabSessionLink, setColabSes
 }
 
 function ControleMemeGeneratePageStep1(props) {
+
+    useEffect(() => {
+        logEvent(analytics, 'page_view', {
+            page_title: 'Generate Page Step 1',
+            page_location: window.location.href,
+            page_path: window.location.pathname
+        });
+    }, [])
+
+
     return (
         <div className="ControleMemeGeneratePageStep1">
             <h1>Please connect to Google Colab backend</h1>
