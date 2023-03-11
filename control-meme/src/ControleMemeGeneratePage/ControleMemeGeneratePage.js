@@ -62,9 +62,16 @@ function ControleMemeGeneratePageStep1(props) {
         <div className="ControleMemeGeneratePageStep1">
             <h1>Please connect to Google Colab backend</h1>
 
-            <p>1. Open the <a href="https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb" target="_blank">Colab Link</a> in another tab</p>
-            <p>2. Run all  cells until you see a meme.koll.ai link (this can take a while)</p>
-            <p>3. Click the link and go back to this page to start creating new memes !</p>
+            <p>1. Open the <a onClick={() => {
+                logEvent(analytics, 'select_content', {
+                    page_title: 'Generate Page Step 1',
+                    url: "https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb"
+                });
+
+            }}
+                href="https://colab.research.google.com/github/koll-ai/control-meme-api/blob/main/Controlmeme_Colab_API.ipynb" target="_blank"> Colab Link</a> in another tab</p>
+            <p>2. Blindly Run all  cells until you see a meme.koll.ai link (this can take a while)</p>
+            <p>3. Click the link in the output of the last cell and go back to this page to start creating new memes !</p>
 
             <br></br>
 

@@ -3,10 +3,12 @@
 //        imageURL: Image URL to be displayed
 //        open: Boolean that indicates if the modal is open or not
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Grid, Modal, Typography } from '@mui/material';
 
 import './ImageInfoModal.css'
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase/firebaseconfig";
 
 const style = {
     position: 'absolute',
@@ -26,6 +28,17 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
 
     const [openDetails, setOpenDetails] = React.useState(false);
     const [displayOriginalImage, setDisplayOriginalImage] = React.useState(false);
+
+    useEffect(() => {
+        if (imageURL === null) {
+            return;
+        }
+        logEvent(analytics, 'select_content', {
+            page_title: 'Landing Page',
+            meme_url: imageURL
+        });
+    }, [imageURL])
+
 
 
     const bodyImageModale = (
