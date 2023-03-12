@@ -62,6 +62,8 @@ function ControleMemeGeneratePageStep1(props) {
         <div className="ControleMemeGeneratePageStep1">
             <h1>Please connect to Google Colab backend</h1>
 
+            <strong>Generation is currently bugged, we're looking into it</strong>
+
             <p>1. Open the <a onClick={() => {
                 logEvent(analytics, 'select_content', {
                     page_title: 'Generate Page Step 1',
