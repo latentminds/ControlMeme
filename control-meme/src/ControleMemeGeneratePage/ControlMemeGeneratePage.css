@@ -47,3 +47,10 @@
     height: 100%;
     width: 25em;
 }
+
+table,
+th,
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}

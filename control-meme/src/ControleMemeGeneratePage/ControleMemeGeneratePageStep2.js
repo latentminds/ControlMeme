@@ -308,6 +308,9 @@ export function ControleMemeGeneratePageStep2(props) {
     return (
         <div className="ControleMemeGeneratePageStep2">
             <ToastContainer />
+            <h2>0. (Optional) Share your colab backend with the community</h2>
+            <Button variant="contained" color="primary"> Share my colab backend </Button>
+
             <h2>1. Select a base image</h2>
             {/* Display side by side centered*/}
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">

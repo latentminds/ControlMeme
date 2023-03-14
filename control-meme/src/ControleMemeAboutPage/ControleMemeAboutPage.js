@@ -1,6 +1,6 @@
-import { logEvent } from "firebase/analytics";
 import { useEffect } from "react";
 import { analytics } from "../firebase/firebaseconfig";
+import { logEvent } from "firebase/analytics";
 
 export const ControleMemeAboutPage = () => {
 

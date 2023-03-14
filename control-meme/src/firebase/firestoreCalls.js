@@ -117,4 +117,16 @@ export async function fetchVariationPaginated() {
 
 
 
-
+export const fetchSharedColabs = async () => {
+    //fetch base memes data with uuid from firestore
+    let sharedColabs = [];
+    return await getDocs(collection(db, "SharedColabs"))
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                sharedColabs.push(doc.data());
+            }
+            );
+            return sharedColabs;
+        }
+        )
+}
