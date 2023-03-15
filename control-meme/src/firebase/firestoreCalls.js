@@ -1,5 +1,5 @@
 import { db } from "./firebaseconfig";
-import { collection, endBefore, getDocs, limit, orderBy, query, startAfter, startAt } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, endBefore, Firestore, getDocs, limit, orderBy, query, startAfter, startAt, Timestamp } from "firebase/firestore";
 
 export const fetchAllGeneratedMemesVariations = async () => {
     //todo: replace with better query when variation are in the db with parent_url
@@ -123,10 +123,40 @@ export const fetchSharedColabs = async () => {
     return await getDocs(collection(db, "SharedColabs"))
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                sharedColabs.push(doc.data());
+                let data = doc.data();
+                data.uuid = doc.id;
+                sharedColabs.push(data);
             }
             );
             return sharedColabs;
         }
         )
+}
+
+export const addSharedColab = async (colab) => {
+
+    const timestamp = Timestamp.now();
+
+    const data_to_add = {
+        'url': colab.url,
+        'timestamp': timestamp
+    }
+
+    //fetch base memes data with uuid from firestore
+    return await addDoc(collection(db, "SharedColabs"), data_to_add)
+        .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+}
+
+export const removeSharedColab = async (uuid) => {
+    return await deleteDoc(doc(db, "SharedColabs", uuid))
+        .then(() => {
+            console.log("Document successfully deleted!");
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
 }

@@ -2,7 +2,7 @@ import { Breadcrumbs, Button, FormControl, Grid, InputLabel, Link, MenuItem, Sel
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseconfig"
 import { collection, getDocs } from "firebase/firestore";
-import { fetchBaseMemesData, fetchBaseMemesUrls, fetchSharedColabs } from "../firebase/firestoreCalls";
+import { fetchBaseMemesData, fetchBaseMemesUrls, fetchSharedColabs, removeSharedColab } from "../firebase/firestoreCalls";
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { UploadImage } from "./UploadImage";
@@ -52,10 +52,35 @@ function ControleMemeGeneratePageStep1(props) {
     const [sharedColabs, setSharedColabs] = useState([]);
 
     useEffect(() => {
+        // fetch available colab sessions
+
+        let colabsInBdd = []
         fetchSharedColabs().then((sharedColabs) => {
-            setSharedColabs(sharedColabs)
             console.log(sharedColabs)
+            colabsInBdd = sharedColabs
+
+            colabsInBdd.forEach((colab) => {
+                fetch(colab.url + "/hello/",
+                    {
+                        method: "GET",
+                        headers: {
+                            'Bypass-Tunnel-Reminder': 'please',
+                        },
+                    })
+                    .then((response) => {
+                        if (response.status == 200) {
+                            console.log("colab is working")
+                            setSharedColabs((sharedColabs) => [...sharedColabs, colab])
+                        } else {
+                            console.log("colab is not working, deleting")
+                            removeSharedColab(colab.uuid)
+                        }
+                    })
+            }
+            )
         })
+
+
 
     }, [])
 
@@ -76,8 +101,37 @@ function ControleMemeGeneratePageStep1(props) {
 
             <p>Current state: <strong>WORKING :D</strong></p>
 
+            <h2>Method 1: Connect to a community backend</h2>
+            <p>1. Select a community backend from the table below</p>
+            <p>2. Click the link and go back to this page to start creating new memes !</p>
+            <table style={{ margin: "auto", border: "1px solid black", borderCollapse: "collapse" }}>
+                <tr>
+                    <th>Date</th>
+                    <th>Link</th>
+                    <th>Connect</th>
+                </tr>
+                {
+                    sharedColabs.map((colab) => {
+                        return (
+                            <tr>
+                                <td>
+                                    {new Date(
+                                        colab.timestamp.seconds * 1000 + colab.timestamp.nanoseconds / 1000000,
+                                    ).toLocaleTimeString()}
+                                </td>
+                                <td><p>{colab.url}</p></td>
+                                <td><Button variant="outlined"
+                                    onClick={() => {
+                                        props.setColabSessionLink(colab.url)
+                                    }}>Connect</Button></td>
+                            </tr>
+                        )
+                    })
+                }
+            </table>
 
-            <h2>Method 1: Run your own Colab backend</h2>
+
+            <h2>Method 2: Run your own Colab backend</h2>
             <p>1. Open the <a onClick={() => {
                 logEvent(analytics, 'select_content', {
                     page_title: 'Generate Page Step 1',
@@ -95,30 +149,6 @@ function ControleMemeGeneratePageStep1(props) {
                 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" />
             </a>
 
-            <h2>Method 2: Connect to a community backend</h2>
-            <p>1. Select a community backend from the table below</p>
-            <p>2. Click the link and go back to this page to start creating new memes !</p>
-            <table style={{ margin: "auto", border: "1px solid black", borderCollapse: "collapse" }}>
-                <tr>
-                    <th>Name</th>
-                    <th>Link</th>
-                    <th>Connect</th>
-                </tr>
-                {
-                    sharedColabs.map((colab) => {
-                        return (
-                            <tr>
-                                <td>{colab.name}</td>
-                                <td><p>{colab.url}</p></td>
-                                <td><Button variant="outlined"
-                                    onClick={() => {
-                                        props.setColabSessionLink(colab.url)
-                                    }}>Connect</Button></td>
-                            </tr>
-                        )
-                    })
-                }
-            </table>
 
 
 

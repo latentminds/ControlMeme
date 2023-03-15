@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { analytics } from "../firebase/firebaseconfig";
 import { logEvent } from "firebase/analytics";
+import { addSharedColab } from "../firebase/firestoreCalls";
 
 
 const notify_error = (message) => toast.error(message, {
@@ -309,7 +310,16 @@ export function ControleMemeGeneratePageStep2(props) {
         <div className="ControleMemeGeneratePageStep2">
             <ToastContainer />
             <h2>0. (Optional) Share your colab backend with the community</h2>
-            <Button variant="contained" color="primary"> Share my colab backend </Button>
+            <Button variant="contained" color="primary"
+                onClick={() => {
+                    addSharedColab({
+                        'url': props.colabSessionLink
+                    })
+                    notify_success("Colab backend shared!")
+                }}
+            >
+                Share my colab backend
+            </Button>
 
             <h2>1. Select a base image</h2>
             {/* Display side by side centered*/}
@@ -456,7 +466,7 @@ export function ControleMemeGeneratePageStep2(props) {
 
                     <div className="generatedMeme" >
                         {generatedImageb64 !== "" && <img className="ControlnetHint" src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image with controlnet" className="GeneratedMeme" />}
-                        {generatedImageb64 === "" && <img className="ControlnetHint" src={DEFAULT_IMAGE_URL} alt="generated image" className="GeneratedMeme" />}
+                        {generatedImageb64 === "" && <img className="ControlnetHint" src={DEFAULT_IMAGE_URL} alt="generated image" />}
                     </div>
 
                     <br />
