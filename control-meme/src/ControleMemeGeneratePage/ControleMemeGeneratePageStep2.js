@@ -465,7 +465,7 @@ export function ControleMemeGeneratePageStep2(props) {
                 <Grid item xs={12} sm={6} mx={1}>
 
                     <div className="generatedMeme" >
-                        {generatedImageb64 !== "" && <img className="ControlnetHint" src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image with controlnet" className="GeneratedMeme" />}
+                        {generatedImageb64 !== "" && <img className="ControlnetHint" src={"data:image/jpeg;base64, " + generatedImageb64} alt="generated image with controlnet" />}
                         {generatedImageb64 === "" && <img className="ControlnetHint" src={DEFAULT_IMAGE_URL} alt="generated image" />}
                     </div>
 
