@@ -101,7 +101,7 @@ export default function LastMemeGrid(props) {
                             /> */}
 
                             <ImageCard
-                                imageSrc={meme.url}
+                                meme={meme}
                                 onClick={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
                                 style={style.GeneratedMeme_img}
                             />
