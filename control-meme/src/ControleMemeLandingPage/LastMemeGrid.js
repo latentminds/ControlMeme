@@ -9,6 +9,7 @@ import { analytics } from "../firebase/firebaseconfig";
 
 
 import { useEffect, useState } from "react";
+import ImageCard from "./ImageCard";
 // Composant that displays the last memes
 // fetches the last 10 memes from the firestore db
 export default function LastMemeGrid(props) {
@@ -94,7 +95,13 @@ export default function LastMemeGrid(props) {
 
                     {lastMemes.map((meme, index) => {
                         return <div className style={style.GeneratedMeme}>
-                            <img src={meme.url} alt="meme" key={index}
+                            {/* <img src={meme.url} alt="meme" key={index}
+                                onClick={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
+                                style={style.GeneratedMeme_img}
+                            /> */}
+
+                            <ImageCard
+                                imageSrc={meme.url}
                                 onClick={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
                                 style={style.GeneratedMeme_img}
                             />

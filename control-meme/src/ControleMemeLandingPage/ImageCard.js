@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@mui/styles';
 import { Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
 import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
 
 export const ImageCard = ({ imageSrc }) => {
-    const classes = useStyles();
     const [upvoteCount, setUpvoteCount] = useState(0);
     const [downvoteCount, setDownvoteCount] = useState(0);
 
@@ -17,9 +15,16 @@ export const ImageCard = ({ imageSrc }) => {
         setDownvoteCount(downvoteCount + 1);
     };
 
+    console.log('imageSrc', imageSrc)
+
     return (
-        <Card className={classes.root}>
-            <CardMedia className={classes.media} image={imageSrc} title={title} />
+        <Card>
+            <img src={imageSrc} alt="meme" style={{
+                width: '18em',
+                height: 'auto',
+                margin: 'auto',
+                cursor: "pointer"
+            }} />
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
                     Upvotes: {upvoteCount}, Downvotes: {downvoteCount}
@@ -27,6 +32,7 @@ export const ImageCard = ({ imageSrc }) => {
                 <IconButton aria-label="upvote" onClick={handleUpvote}>
                     <ThumbUp />
                 </IconButton>
+                {upvoteCount - downvoteCount}
                 <IconButton aria-label="downvote" onClick={handleDownvote}>
                     <ThumbDown />
                 </IconButton>
