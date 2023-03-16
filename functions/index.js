@@ -30,8 +30,8 @@ exports.upvoteVariation = functions.https.onRequest((request, response) => {
         }
         console.log("idToken", idToken);
         console.log("before verify")
-        // validate token   
-        getAuth().verifyIdToken(idToken).then((decodedIdToken) => {
+        // validate token
+        getAuth().verifyIdToken(idToken, true).then((decodedIdToken) => {
             console.log('ID Token correctly decoded', decodedIdToken);
             const userId = decodedIdToken.uid;
             const variationId = request.query.variationId;
