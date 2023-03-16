@@ -94,9 +94,7 @@ export default function ImageInfoModal({ imageInfo, imageURL, parentImageUrl, op
                     setDisplayOriginalImage(false)
                 }
                 }
-
             >
-
 
                 {bodyImageModale}
 

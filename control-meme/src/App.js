@@ -1,10 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
 import ControleMeme from './ControleMeme';
-
 import { createTheme } from '@mui/material/styles';
+import { UserContext, UserProvider } from './UserContext';
+import { useContext, useState } from 'react';
 
 function App() {
+
+  const [user, setUser] = useState(null)
+
 
   const theme = createTheme({
     palette: {
@@ -16,7 +20,9 @@ function App() {
 
   return (
     <div className="App">
-      <ControleMeme />
+      <UserProvider value={{ user, setUser }}>
+        <ControleMeme />
+      </UserProvider>
     </div>
   );
 }
