@@ -3,8 +3,12 @@ const functions = require("firebase-functions");
 const cors = require('cors')({ origin: true });
 const { initializeApp, applicationDefault } = require('firebase-admin/app');
 const { getAuth } = require("firebase-admin/auth");
-
+const { getFirestore } = require("firebase-admin/firestore");
+const { FieldValue } = require("firebase-admin/firestore");
 const admin = initializeApp({ credential: applicationDefault() });
+const firestore = getFirestore(admin);
+
+
 console.log('reloaded')
 
 
@@ -37,20 +41,20 @@ exports.upvoteVariation = functions.https.onRequest((request, response) => {
             const variationId = request.query.variationId;
 
             // check if user already upvoted
-            admin.firestore().collection('Users').doc(userId).get().then((doc) => {
+            firestore.collection('Users').doc(userId).get().then((doc) => {
                 if (doc.exists) {
                     if (doc.data().upvotes.includes(variationId)) {
                         response.send("Already upvoted");
                         return;
                     }
                 }
-                var variationRef = admin.firestore().collection('Variations').doc(variationId);
-                var userRef = admin.firestore().collection('Users').doc(userId);
+                var variationRef = firestore.collection('Variations').doc(variationId);
+                var userRef = firestore.collection('Users').doc(userId);
 
-                var batch = admin.firestore().batch();
+                var batch = firestore.batch();
 
-                batch.update(variationRef, { upvotes: admin.firestore.FieldValue.increment(1) });
-                batch.update(userRef, { upvotes: admin.firestore.FieldValue.arrayUnion(variationId) });
+                batch.update(variationRef, { upvotes: FieldValue.increment(1) });
+                // batch.update(userRef, { upvotes: FieldValue.arrayUnion(variationId) });
 
                 batch.commit().then(function () {
                     response.send("Upvote done");

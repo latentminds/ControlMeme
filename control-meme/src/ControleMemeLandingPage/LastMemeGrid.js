@@ -102,7 +102,7 @@ export default function LastMemeGrid(props) {
 
                             <ImageCard
                                 meme={meme}
-                                onClick={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
+                                onClickImage={() => props.onClickImage(meme, meme.url, meme.parent_url, meme.url_hint)}
                                 style={style.GeneratedMeme_img}
                             />
                         </div>
