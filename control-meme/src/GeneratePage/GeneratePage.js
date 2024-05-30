@@ -6,8 +6,9 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import "./ControlMemeGeneratePage.css"
+import "./GeneratePage.css"
 import { ToastContainer, toast } from 'react-toastify';
+import { fetchBaseMemesData, fetchBaseMemesUrls, fetchSharedColabs, removeSharedColab } from "../firebase/firestoreCalls";
 import 'react-toastify/dist/ReactToastify.css';
 import { analytics } from "../firebase/firebaseconfig";
 import { logEvent } from "firebase/analytics";
@@ -23,6 +24,7 @@ const notify_error = (message) => toast.error(message, {
     draggable: true,
     progress: undefined,
 });
+
 const notify_success = (message) => toast.success(message, {
     position: "top-right",
     autoClose: 5000,
@@ -178,7 +180,8 @@ const ParamsPanel = ({
     )
 }
 
-export function ControleMemeGeneratePageStep2(props) {
+export default function GeneratePage(props) {
+
     const DEFAULT_IMAGE_URL = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
 
     const handleDragStart = (e) => e.preventDefault();
@@ -202,6 +205,8 @@ export function ControleMemeGeneratePageStep2(props) {
         'samplerIndex': 'Euler a'
     });
 
+    const [baseMemes, setBaseMemes] = useState([]);
+
     const [controlnetHintb64, setControlnetHintb64] = useState("");
     const [generatedImageb64, setGeneratedImageb64] = useState("");
 
@@ -212,10 +217,16 @@ export function ControleMemeGeneratePageStep2(props) {
 
     useEffect(() => {
         logEvent(analytics, 'page_view', {
-            page_title: 'ControleMemeGeneratePageStep2',
+            page_title: 'GeneratePageStep2',
             page_location: window.location.href,
             page_path: window.location.pathname
         });
+
+        fetchBaseMemesData().then((baseMemes) => {
+            setBaseMemes(baseMemes)
+            console.log(baseMemes)
+        });
+
     }, [])
 
     // send file to api
@@ -298,7 +309,7 @@ export function ControleMemeGeneratePageStep2(props) {
 
 
     // create img list from baseMemesUrls
-    const items = props.baseMemes.map((baseMeme, index) => {
+    const items = baseMemes.map((baseMeme, index) => {
         return (
             <img className={params.selectedMeme.url == baseMeme.url ? "SelectedMeme" : ""} src={baseMeme.url} onDragStart={handleDragStart} role="presentation" onClick={() => setParams({ ...params, selectedMeme: baseMeme })} />
         )
@@ -307,19 +318,8 @@ export function ControleMemeGeneratePageStep2(props) {
 
 
     return (
-        <div className="ControleMemeGeneratePageStep2">
+        <div className="GeneratePageStep2">
             <ToastContainer />
-            <h2>0. (Optional) Share your colab backend with the community</h2>
-            <Button variant="contained" color="primary"
-                onClick={() => {
-                    addSharedColab({
-                        'url': props.colabSessionLink
-                    })
-                    notify_success("Colab backend shared!")
-                }}
-            >
-                Share my colab backend
-            </Button>
 
             <h2>1. Select a base image</h2>
             {/* Display side by side centered*/}
