@@ -1,6 +1,5 @@
 firebase_key.json
-__pycache__/main.cpython-39.pyc
-firebase_key.json
+__pycache__/*
 *.png
 *.jpeg
 *.jpg
