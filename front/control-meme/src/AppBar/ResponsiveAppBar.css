@@ -1,0 +1,8 @@
+.AppBar {
+    background: #fcfcfc;
+    border-bottom: solid 2px black;
+}
+
+.AppBar * {
+    color: rgb(0, 0, 0);
+}
