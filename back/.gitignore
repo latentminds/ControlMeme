@@ -1,0 +1,5 @@
+firebase_key.json
+__pycache__/*
+*.png
+*.jpeg
+*.jpg
