@@ -22,5 +22,5 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-cloudrun@v2'
       with:
-        service: 'hello-cloud-run'
-        image: 'gcr.io/cloudrun/hello'
+        source: 'back'
+        env_vars: 'RUNPOD_API_KEY=${{secrets.RUNPOD_API_KEY}},RUNPOD_ENDPOINT_ID=${{ secrets.RUNPOD_ENDPOINT_ID}}'
