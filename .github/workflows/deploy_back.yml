@@ -1,0 +1,26 @@
+name: Deploy Back
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_front:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: 'actions/checkout@v4'
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: 'my-project'
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+    
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-cloudrun@v2'
+      with:
+        service: 'hello-cloud-run'
+        image: 'gcr.io/cloudrun/hello'
