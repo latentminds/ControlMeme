@@ -11,7 +11,7 @@ import time
 import os
 import base64
 from add_signature import overlay_logo
-from runpod_caller import comfy_workflow
+from runpod_caller import comfy_workflow, fill_template
 import json
 import cv2
 from PIL import Image
@@ -108,10 +108,7 @@ def generate():
     # TODO test this
     image_id = hash(b64_input + prompt + seed)
     
-    # update workflow in the right places
-    generation_workflow["6"]["inputs"]["text"] = prompt
-    generation_workflow["3"]["inputs"]["seed"] = seed
-
+    generation_workflow = fill_template("generation", seed=seed, prompt=prompt)
     comfy_reply = comfy_workflow(b64_input, generation_workflow)
 
     # return 400 if there is an error with comfy
