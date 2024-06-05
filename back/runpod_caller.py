@@ -8,7 +8,7 @@ import os
 
 # call comfyUI runpod api
 
-def call_comfy_controlnet(b64_input:str, workflow:str) -> str:    
+def comfy_workflow(b64_input:str, workflow:str) -> str:    
     runpod_api_key = os.environ['RUNPOD_API_KEY']
     runpod_endpoint_id = os.environ['RUNPOD_ENDPOINT_ID']
     

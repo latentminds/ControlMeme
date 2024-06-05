@@ -11,7 +11,7 @@ import time
 import os
 import base64
 from add_signature import overlay_logo
-from call_runpod import call_comfy_controlnet
+from runpod_caller import comfy_workflow
 import json
 import cv2
 from PIL import Image
@@ -23,21 +23,20 @@ app = initialize_app(cred)
 db = firestore.client()
 
 storage_client = storage.Client()
-bucket = storage_client.get_bucket("control-meme-public")
+public_bucket = storage_client.get_bucket("control-meme-public")
+private_bucket = storage_client.get_bucket("control-meme-private")
 
 # constants
 with open('workflows/controlmeme.json') as f:
-    controlmeme_workflow = json.load(f)
+    generation_workflow = json.load(f)
+
+with open('workflows/hint.json') as f:
+    hint_workflow = json.load(f)
 
 logo_image = cv2.imread("images/watermark.png", cv2.IMREAD_UNCHANGED)
 
 app = Flask(__name__)
 CORS(app)
-
-
-@app.route("/api/hello/")
-def hello_world():
-    return "<p>Hello, World!</p>"
 
 def pil_to_cv2(pil_image):
     image = pil_image.convert('RGB')
@@ -59,18 +58,18 @@ def pil_to_bytes(pil_image, format='JPEG'):
     return image_byte_array
 
 
-def add_variation_to_data(generated_image, original_image, prompt):
+def save_variation_to_base(generated_image, original_image, prompt):
     formated_timestamp = time.strftime("%Y%m%d-%H%M%S")
 
     # save generated meme 
     bucket_save_path = "meme_variation_" + formated_timestamp + ".jpeg"
-    blob = bucket.blob(bucket_save_path)
+    blob = public_bucket.blob(bucket_save_path)
     blob.upload_from_file(pil_to_bytes(generated_image), content_type="image/jpeg")
     url_variation = "https://storage.googleapis.com/control-meme-public/" + bucket_save_path
 
     # save parent image
     parent_save_path = "meme_variation_" + formated_timestamp + "_parent.jpeg"
-    blob = bucket.blob(parent_save_path)
+    blob = public_bucket.blob(parent_save_path)
     blob.upload_from_file(pil_to_bytes(original_image), content_type="image/jpeg")
     url_parent = "https://storage.googleapis.com/control-meme-public/" + parent_save_path
 
@@ -82,31 +81,94 @@ def add_variation_to_data(generated_image, original_image, prompt):
     }
 
     db = firestore.client()
+
     # save meme variation to firestore in the Variations collection with parent memeID in attribute parent_uuid
     doc_ref = db.collection("Variations").document()
     doc_ref.set(variation_data)
 
 
-@app.route("/hint/", methods=["POST"])
+@app.get("/hello/")
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+
+@app.post("/hint/")
 def create_hint():
     #TODO
     pass
 
 
-@app.route("/generate/", methods=["POST"])
+@app.post("/generate/")
 def generate():
-    #TODO
-    pass
+    args = request.get_json()
+    b64_input = args.get("imageb64")
+    prompt = args.get("prompt")
+    seed = args.get("seed")
+
+    # TODO test this
+    image_id = hash(b64_input + prompt + seed)
+    
+    # update workflow in the right places
+    generation_workflow["6"]["inputs"]["text"] = prompt
+    generation_workflow["3"]["inputs"]["seed"] = seed
+
+    comfy_reply = comfy_workflow(b64_input, generation_workflow)
+
+    # return 400 if there is an error with comfy
+    if not comfy_reply['output']['message']:
+        return jsonify({"error": comfy_reply}), 400
+    
+    b64_image = base64.b64decode(comfy_reply['output']['message'])
+    
+    # store the generation in the private bucket in base with image_id
+    image_blob = private_bucket.blob("meme_variation_" + image_id + ".jpeg")
+    image_blob.upload_from_file(BytesIO(b64_image), content_type="image/jpeg")
+
+    parent_blob = private_bucket.blob("meme_variation_" + image_id + "_parent.jpeg")
+    parent_blob.upload_from_file(BytesIO(b64_input), content_type="image/jpeg")
+
+    # creating the answer dict
+    answer = {
+        "id": image_id,
+        "image": base64.b64decode(comfy_reply['output']['message'])
+    }
+
+    return answer
 
 
-@app.route("/save/", methods=["POST"])
+@app.post("/save/")
 def save_variation():
-    #TODO
-    pass
+    args = request.get_json()
+    image_id = args.get("image_id")
+    prompt = args.get("prompt")
+
+    # move from private bucket to public bucket using image_id
+    image_name = "meme_variation_" + image_id + ".jpeg"
+    image_blob = private_bucket.blob(image_name)
+    private_bucket.copy_blob(image_blob, public_bucket, image_name)
+
+    parent_name = "meme_variation_" + image_id + "_parent.jpeg"
+    parent_blob = private_bucket.blob(parent_name)
+    private_bucket.copy_blob(parent_blob, public_bucket, parent_name)
+
+    # add line for this variation in firebase 
+    db = firestore.client()
+    doc_ref = db.collection("Variations").document()
+
+    variation_data = {
+        "url": "https://storage.googleapis.com/control-meme-public/" + image_name,
+        "parent_url": "https://storage.googleapis.com/control-meme-public/" + parent_name,
+        "prompt": prompt,
+        "timestamp": firestore.SERVER_TIMESTAMP,
+    }
+
+    doc_ref.set(variation_data)
+
+    return 200
 
 
 # route to add a new meme variation to memeID
-@app.route("/api/save_variation/", methods=["POST"])
+@app.post("/save_variation/")
 def add_variation():
     """
     Add a new meme variation
@@ -114,12 +176,12 @@ def add_variation():
 
     # get post data from post request
     args = request.get_json()
-    inputb64 = args.get("imageb64")
+    b64_input = args.get("imageb64")
     prompt = args.get("prompt")
     
-    original_image = Image.open(BytesIO(inputb64))
+    original_image = Image.open(BytesIO(b64_input))
 
-    comfy_reply = call_comfy_controlnet(inputb64, controlmeme_workflow)
+    comfy_reply = comfy_workflow(b64_input, generation_workflow)
 
     if not comfy_reply['output']['message']:
         return jsonify({"error": comfy_reply}), 400
@@ -133,9 +195,10 @@ def add_variation():
     # convert final image to PIL 
     final_image = cv2_to_pil(watermarked)
 
-    add_variation_to_data(final_image, original_image, prompt)
+    save_variation_to_base(final_image, original_image, prompt)
 
     return "success"
+
 
 if __name__ == '__main__':
     app.run(threaded=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
