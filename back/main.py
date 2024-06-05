@@ -102,8 +102,7 @@ def generate():
     prompt = args.get("prompt")
     seed = args.get("seed")
 
-    # TODO test this
-    image_id = hash(b64_input + prompt + seed)
+    image_id = hash(f"{b64_input}{prompt}{seed}")
     
     generation_workflow = fill_template("generation", seed=seed, prompt=prompt)
     comfy_reply = comfy_workflow(b64_input, generation_workflow)
@@ -124,7 +123,7 @@ def generate():
     # creating the answer dict
     answer = {
         "id": image_id,
-        "image": base64.b64decode(comfy_reply['output']['message'])
+        "image": b64_image
     }
 
     return answer
