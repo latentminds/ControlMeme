@@ -1,0 +1,32 @@
+name: Deploy Back
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_back:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: 'actions/checkout@v4'
+
+    - name: Load Firebase Service file
+      env:
+        DATA: ${{ secrets.FIREBASE_KEY_JSON }}
+      run: echo $DATA | base64 -di > back/firebase_key.json
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: 'control-meme'
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+    
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-cloudrun@v2'
+      with:
+        source: 'back'
+        service: 'controle-meme-back'
+        env_vars: 'RUNPOD_API_KEY=${{secrets.RUNPOD_API_KEY}}, RUNPOD_ENDPOINT_ID=${{ secrets.RUNPOD_ENDPOINT_ID}}'
