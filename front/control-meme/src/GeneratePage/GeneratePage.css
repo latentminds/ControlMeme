@@ -5,7 +5,6 @@
     /* margin: auto; */
     /* height: 33.5em; */
     border-radius: "10px";
-    background-color: rgb(233, 233, 233);
     border: "1px solid #000";
 }
 
@@ -13,12 +12,12 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    height: 34em;
+    height: 18em;
 }
 
 .MemeSelector img {
-    height: 10em;
-    width: 10em;
+    height: 5em;
+    width: 5em;
     margin: 5px;
     border: solid 1px black;
     object-fit: cover;
@@ -32,7 +31,7 @@
 }
 
 .MemeSelector .SelectedMeme {
-    border: 0.4em solid rgb(29, 72, 129);
+    border: 0.4em solid rgb(29, 129, 59);
     box-sizing: border-box;
 }
 
@@ -48,9 +47,11 @@
     width: 25em;
 }
 
-table,
-th,
-td {
-    border: 1px solid black;
+table, th, td {
     border-collapse: collapse;
+}
+
+#selectedImage {
+    max-height: 25em;
+    width: "auto"
 }

@@ -18,12 +18,12 @@ export const fetchAllGeneratedMemesVariations = async () => {
                 variations.push(meme);
             }
             );
-            console.log(variations)
+
             //sort by date
             variations.sort((a, b) => {
                 return new Date(b.timestamp.seconds) - new Date(a.timestamp.seconds);
             });
-            console.log(variations)
+
         }
         )
 
