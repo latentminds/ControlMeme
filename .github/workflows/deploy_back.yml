@@ -16,7 +16,7 @@ jobs:
     - name: Load Firebase Service file
       env:
         DATA: ${{ secrets.FIREBASE_KEY_JSON }}
-        run: echo $DATA | base64 -di > back/firebase_key.json
+      run: echo $DATA | base64 -di > back/firebase_key.json
 
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
