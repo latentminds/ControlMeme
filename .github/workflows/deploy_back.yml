@@ -13,6 +13,11 @@ jobs:
     steps:
     - uses: 'actions/checkout@v4'
 
+    - name: Load Firebase Service file
+      env:
+        DATA: ${{ secrets.FIREBASE_KEY_JSON }}
+        run: echo $DATA | base64 -di > back/firebase_key.json
+
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
@@ -23,4 +28,4 @@ jobs:
       uses: 'google-github-actions/deploy-cloudrun@v2'
       with:
         source: 'back'
-        env_vars: 'RUNPOD_API_KEY=${{secrets.RUNPOD_API_KEY}},RUNPOD_ENDPOINT_ID=${{ secrets.RUNPOD_ENDPOINT_ID}}'
+        env_vars: 'RUNPOD_API_KEY=${{secrets.RUNPOD_API_KEY}}, RUNPOD_ENDPOINT_ID=${{ secrets.RUNPOD_ENDPOINT_ID}}'
