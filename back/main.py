@@ -27,9 +27,6 @@ public_bucket = storage_client.get_bucket("control-meme-public")
 private_bucket = storage_client.get_bucket("control-meme-private")
 
 # constants
-with open('workflows/controlmeme.json') as f:
-    generation_workflow = json.load(f)
-
 with open('workflows/hint.json') as f:
     hint_workflow = json.load(f)
 
@@ -164,37 +161,37 @@ def save_variation():
     return 200
 
 
-# route to add a new meme variation to memeID
-@app.post("/save_variation/")
-def add_variation():
-    """
-    Add a new meme variation
-    """
-
-    # get post data from post request
-    args = request.get_json()
-    b64_input = args.get("imageb64")
-    prompt = args.get("prompt")
-    
-    original_image = Image.open(BytesIO(b64_input))
-
-    comfy_reply = comfy_workflow(b64_input, generation_workflow)
-
-    if not comfy_reply['output']['message']:
-        return jsonify({"error": comfy_reply}), 400
-
-    generated_image = Image.open(BytesIO(base64.b64decode(comfy_reply['output']['message'])))
-
-    # overlay_logo uses cv2 image format
-    cv2_image = pil_to_cv2(generated_image)
-    watermarked = overlay_logo(cv2_image, logo_image)
-
-    # convert final image to PIL 
-    final_image = cv2_to_pil(watermarked)
-
-    save_variation_to_base(final_image, original_image, prompt)
-
-    return "success"
+## route to add a new meme variation to memeID
+#@app.post("/save_variation/")
+#def add_variation():
+#    """
+#    Add a new meme variation
+#    """
+#
+#    # get post data from post request
+#    args = request.get_json()
+#    b64_input = args.get("imageb64")
+#    prompt = args.get("prompt")
+#    
+#    original_image = Image.open(BytesIO(b64_input))
+#
+#    comfy_reply = comfy_workflow(b64_input, generation_workflow)
+#
+#    if not comfy_reply['output']['message']:
+#        return jsonify({"error": comfy_reply}), 400
+#
+#    generated_image = Image.open(BytesIO(base64.b64decode(comfy_reply['output']['message'])))
+#
+#    # overlay_logo uses cv2 image format
+#    cv2_image = pil_to_cv2(generated_image)
+#    watermarked = overlay_logo(cv2_image, logo_image)
+#
+#    # convert final image to PIL 
+#    final_image = cv2_to_pil(watermarked)
+#
+#    save_variation_to_base(final_image, original_image, prompt)
+#
+#    return "success"
 
 
 if __name__ == '__main__':
