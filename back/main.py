@@ -108,10 +108,10 @@ def generate():
     comfy_reply = comfy_workflow(b64_input, generation_workflow)
 
     # return 400 if there is an error with comfy
-    if not comfy_reply['output']['message']:
+    if not comfy_reply['outputs']['message']:
         return jsonify({"error": comfy_reply}), 400
     
-    b64_image = base64.b64decode(comfy_reply['output']['message'])
+    b64_image = base64.b64decode(comfy_reply['outputs']['message'])
     
     # store the generation in the private bucket in base with image_id
     image_blob = private_bucket.blob("meme_variation_" + image_id + ".jpeg")
