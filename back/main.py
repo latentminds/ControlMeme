@@ -87,6 +87,24 @@ def add_variation_to_data(generated_image, original_image, prompt):
     doc_ref.set(variation_data)
 
 
+@app.route("/hint/", methods=["POST"])
+def create_hint():
+    #TODO
+    pass
+
+
+@app.route("/generate/", methods=["POST"])
+def generate():
+    #TODO
+    pass
+
+
+@app.route("/save/", methods=["POST"])
+def save_variation():
+    #TODO
+    pass
+
+
 # route to add a new meme variation to memeID
 @app.route("/api/save_variation/", methods=["POST"])
 def add_variation():
