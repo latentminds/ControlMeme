@@ -37,12 +37,8 @@ const notify_success = (message) => toast.success(message, {
 
 const ParamsPanel = ({
     params, setParams,
-    colabSessionLink,
-    controlnetHintb64, setControlnetHintb64
+    controlnetHintb64, setControlnetHintb64, apiUrl
 }) => {
-
-
-
 
     const [previewButtonDisabled, setPreviewButtonDisabled] = useState(false);
 
@@ -61,7 +57,7 @@ const ParamsPanel = ({
         console.log(args)
 
         // call api POST at /hint/ and get base64 image response
-        fetch(colabSessionLink + '/hint/', {
+        fetch(apiUrl + '/hint/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +75,7 @@ const ParamsPanel = ({
             .catch((error) => {
                 console.error('Error:', error);
                 setPreviewButtonDisabled(false);
-                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
+                notify_error("Error: API is not responding. Please try again in a minute.")
             }
             );
     }
@@ -224,7 +220,6 @@ export default function GeneratePage(props) {
 
         fetchBaseMemesData().then((baseMemes) => {
             setBaseMemes(baseMemes)
-            console.log(baseMemes)
         });
 
     }, [])
@@ -232,8 +227,7 @@ export default function GeneratePage(props) {
     // send file to api
     const handleClickGenerate = () => {
         setGenerateButtonDisabled(true)
-        // convert steps to int
-        console.log("selectedMeme", params.selected_meme)
+
         const selectedMemeUUID = params.selectedMeme.uuid
 
         const args = {
@@ -258,7 +252,7 @@ export default function GeneratePage(props) {
         }
 
         // call api and get base64 image response
-        fetch(props.colabSessionLink + '/', {
+        fetch(props.apiUrl + '/generate/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -277,7 +271,7 @@ export default function GeneratePage(props) {
             )
             .catch((error) => {
                 console.error('Error:', error);
-                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
+                notify_error("Error: API is not responding. Please try again in a minute.")
                 setGenerateButtonDisabled(false)
             }
             );
@@ -287,7 +281,7 @@ export default function GeneratePage(props) {
     const handleClickAddToPublic = () => {
         // fetch colab link
         setAddtopublicButtonDisabled(true)
-        fetch(props.colabSessionLink + '/save_last/', {
+        fetch(props.apiUrl + '/save/', {
             method: 'GET',
             headers: {
                 'Bypass-Tunnel-Reminder': 'please'
@@ -301,7 +295,7 @@ export default function GeneratePage(props) {
             )
             .catch((error) => {
                 console.error('Error:', error);
-                notify_error("Error: Automatic1111 api is not responding. Please try again in a minute.")
+                notify_error("Error: API is not responding. Please try again in a minute.")
             }
             );
     }
@@ -346,11 +340,12 @@ export default function GeneratePage(props) {
             {/* Display side by side */}
             <div className="ParamsPanel">
                 <ParamsPanel
-                    params={params} setParams={setParams}
-                    colabSessionLink={props.colabSessionLink}
-                    controlnetHintb64={controlnetHintb64} setControlnetHintb64={setControlnetHintb64}
+                    params={params}
+                    setParams={setParams}
+                    apiUrl={props.apiUrl}
+                    controlnetHintb64={controlnetHintb64}
+                    setControlnetHintb64={setControlnetHintb64}
                 />
-
             </div>
 
             <Grid container spacing={1} direction="row" justifyContent="center" alignItems="center">
@@ -452,7 +447,7 @@ export default function GeneratePage(props) {
                         {generateButtonDisabled === true && <CircularProgress style={{ margin: "auto" }} />}
                         {generateButtonDisabled === false &&
                             <Button variant="contained" color="primary" onClick={() => handleClickGenerate()}
-                                disabled={generateButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
+                                disabled={generateButtonDisabled === true || props.apiUrl === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}>
                                 Generate
                             </Button>
                         }
@@ -470,9 +465,14 @@ export default function GeneratePage(props) {
                     </div>
 
                     <br />
-                    <Button variant="contained" color="primary" onClick={() => handleClickAddToPublic()}
-                        disabled={addtopublicButtonDisabled === true || props.colabSessionLink === "" || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}
-                    >Add to public gallery</Button>
+
+                    <Button
+                        variant="contained" color="primary"
+                        onClick={() => handleClickAddToPublic()}
+                        disabled={addtopublicButtonDisabled === true || params.selectedMeme.url === DEFAULT_IMAGE_URL || prompt === "" || params.numInferencesSteps === "" || params.controlnetPreprocess === "" || params.controlnetModel === "" || params.controlnetThresholdA === "" || params.controlnetThresholdB === ""}
+                    >
+                        Add to public gallery
+                    </Button>
                 </Grid>
             </Grid>
         </div >
