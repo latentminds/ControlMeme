@@ -84,7 +84,7 @@ def save_variation_to_base(generated_image, original_image, prompt):
     doc_ref.set(variation_data)
 
 
-@app.get("/hello/")
+@app.get("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 
@@ -107,8 +107,10 @@ def generate():
     generation_workflow = fill_template("generation", seed=seed, prompt=prompt)
     comfy_reply = comfy_workflow(b64_input, generation_workflow)
 
+    print(comfy_reply)
+
     # return 400 if there is an error with comfy
-    if not comfy_reply['outputs']['message']:
+    if "error" in comfy_reply:
         return jsonify({"error": comfy_reply}), 400
     
     b64_image = base64.b64decode(comfy_reply['outputs']['message'])
