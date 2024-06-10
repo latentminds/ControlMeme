@@ -93,8 +93,6 @@ export default function GeneratePage(props) {
             "imageb64": imageb64,
         }
 
-        console.log(imageb64);
-
         // call api and get base64 image response
         fetch(props.apiUrl + '/generate/', {
             method: 'POST',
