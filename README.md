@@ -31,4 +31,4 @@ firebase deploy --only hosting
 
 # TODO:
 
-- [ ] Finir de déplacer le dosser `back` dans `functions`
+- [ ] Finir de déplacer les routes dans `back` dans `functions`
