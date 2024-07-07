@@ -19,7 +19,7 @@ export default function ControleMeme() {
 
             <div className="content">
                 {currentPage === 'Browse' && <ControleMemeLandingPage lastMemes={loadedVariations} setLastMemes={setLoadedVariations} />}
-                {currentPage === 'Generate' && <GeneratePage apiUrl="https://controle-meme-back-n7bkntouja-uc.a.run.app"/>}
+                {currentPage === 'Generate' && <GeneratePage apiUrl="https://flaskwrapper-mirezmindq-uc.a.run.app/" />}
                 {currentPage === 'About' && <ControleMemeAboutPage />}
             </div>
         </div>

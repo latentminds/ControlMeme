@@ -76,8 +76,8 @@ export default function GeneratePage(props) {
         const imageElement = document.getElementById('selectedImage');
 
         // Check if the image element exists
-        if (!imageElement) return;        
-        
+        if (!imageElement) return;
+
         // Convert image to b64
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -85,7 +85,7 @@ export default function GeneratePage(props) {
         canvas.height = imageElement.height;
         context.drawImage(imageElement, 0, 0);
 
-        const imageb64 = canvas.toDataURL('image/png');
+        const imageb64 = canvas.toDataURL('image/png').split(",")[1];
 
         const args = {
             "prompt": params.prompt,
@@ -102,10 +102,10 @@ export default function GeneratePage(props) {
             },
             body: JSON.stringify(args),
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                setGeneratedImageb64(data)
+                setGeneratedImageb64(data["image"])
                 setGenerateButtonDisabled(false)
                 setAddtopublicButtonDisabled(false)
                 notify_success("Variation generated!")
@@ -183,7 +183,7 @@ export default function GeneratePage(props) {
                     <FormControl fullWidth>
                         <TextField label="Prompt" variant="outlined" value={params.prompt} onChange={(e) => setParams({ ...params, prompt: e.target.value })} />
                         <br />
-                        
+
                         {/* align center */}
                         {generateButtonDisabled === true && <CircularProgress style={{ margin: "auto" }} />}
                         {generateButtonDisabled === false &&

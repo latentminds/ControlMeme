@@ -22,6 +22,11 @@ firebase emulators:start --only functions
 firebase deploy --only functions
 ```
 
+## deploy hosting
+```bash
+npm run build
+firebase deploy --only hosting
+```
 
 
 # TODO:

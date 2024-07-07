@@ -2,7 +2,7 @@
 # To get started, simply uncomment the below code or create your own.
 # Deploy with `firebase deploy`
 
-from firebase_functions import https_fn
+from firebase_functions import https_fn, options
 from firebase_admin import initialize_app
 import runpod_caller
 import flask
@@ -36,11 +36,22 @@ def generate():
 
 
 @app.post("/hello/")
-def hello():
+def hello_flask():
     return {"message": "Hello from Firebase!"}
 
 
-@https_fn.on_request()
+@https_fn.on_request(
+    cors=options.CorsOptions(
+        cors_origins=["*"],
+        cors_methods=["get", "post"],
+    )
+)
 def flaskwrapper(req: https_fn.Request) -> https_fn.Response:
     with app.request_context(req.environ):
         return app.full_dispatch_request()
+
+
+# hello
+@https_fn.on_request()
+def hello_world(req: https_fn.Request) -> https_fn.Response:
+    return https_fn.Response("Hello from Firebase!")
